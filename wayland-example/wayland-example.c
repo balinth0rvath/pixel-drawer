@@ -24,6 +24,10 @@ struct wl_shell *shell = NULL;
 // wl_shell_get_shell_surface
 // wl_shell_surface_set_toplevel
 
+EGLint configList[] = {
+					EGL_RED_SIZE, 8,
+					EGL_GREEN_SIZE, 8,
+					EGL_BLUE_SIZE, 8};
 void global_object_available(void* data, struct wl_registry *registry, uint32_t name, const char* interface, uint32_t version)
 {
 	printf("new wayland global object: interface=%s, name=%i\n", interface, name);
@@ -70,6 +74,25 @@ void egl_init()
 
 	printf("EGL major %i, minor %i\n",major, minor);
 
+	EGLint maxConfigs, numConfigs;
+	if (eglGetConfigs(eglDisplay, NULL, 0, &maxConfigs)!=EGL_TRUE)
+	{
+		printf("Error determining egl configs\n");
+		exit(1);
+	}
+
+	printf("Max configs: %i\n", maxConfigs);
+	EGLConfig* configs = (EGLConfig*)calloc((int)maxConfigs,sizeof(EGLConfig));
+	printf("allocating %i EGLConfigs with size %u to %x\n", (int)maxConfigs, sizeof(EGLConfig), configs);	
+	if (eglChooseConfig(eglDisplay, configList, configs, maxConfigs, &numConfigs)!=EGL_TRUE)
+	{
+		//GLenum e = glGetError();
+		printf("Error choosing egl configs \n");
+		exit(1);
+	}
+
+	printf("Number of available configs: %i \n", numConfigs);
+	
 }
 
 int main(int argc, char **argv) {
