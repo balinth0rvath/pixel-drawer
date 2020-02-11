@@ -1,4 +1,5 @@
-//cc -g -o wex wayland-example.c -lwayland-client -lEGL -lGLESv2 -lwayland-egl
+// . /opt/fslc-xwayland/2.4.4/environment-setup-armv7at2hf-neon-fslc-linux-gnueabi
+// ${CC} -DLINUX -g -o wex wayland-example.c -lwayland-client -lEGL -lGLESv2 -lwayland-egl
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -24,6 +25,11 @@ EGLContext ctx;
 EGLSurface eglSurface; 
 
 EGLint configList[] = {
+			EGL_RED_SIZE, 8,
+			EGL_GREEN_SIZE, 8,
+			EGL_BLUE_SIZE, 8,
+			EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
+			EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,	
 					EGL_NONE
 					};
 
@@ -143,8 +149,9 @@ int main(int argc, char **argv) {
 	
 	printf("success \n");
 
-	glViewport(4,4,70,50);
-	glClearColor(1.0f,0.0f,0.0f,0.0f);
+	glViewport(0,0,700,500);
+
+	glClearColor(1.0f,1.0f,0.0f,1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 	eglSwapBuffers(eglDisplay, eglSurface);
 	getchar();
