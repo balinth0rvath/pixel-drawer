@@ -12,12 +12,15 @@
 
 EGLint major, minor;
 
-struct wl_display *display = NULL;
-struct wl_compositor *compositor = NULL;
-struct wl_shell *shell = NULL;
+struct display {
+	struct wl_display *display;
+	struct wl_compositor *compositor;
+	struct wl_shell *shell;
+	struct wl_regisry* registry;
+};
+
 struct wl_egl_window * window = NULL;
 struct wl_surface * surface = NULL;
-struct wl_regisry* registry = NULL;
 struct wl_shell_surface* shell_surface = NULL;
 EGLDisplay eglDisplay;
 EGLConfig* configs;
@@ -38,18 +41,27 @@ static const EGLint context_attribs[] = {
 		EGL_NONE
 	};
 
+void global_object_available(void*, struct wl_registry*, uint32_t, const char*, uint32_t);
+void global_object_removed(void*, struct wl_registry*, uint32_t);
+
+struct wl_registry_listener listener = {
+	global_object_available,
+	global_object_removed
+};
+
 void global_object_available(void* data, struct wl_registry *registry, uint32_t name, const char* interface, uint32_t version)
 {
+	struct display* display = data;
 	printf("new wayland global object: interface=%s, name=%i\n", interface, name);
 	if (strcmp(interface,"wl_compositor")==0)
 	{
-		compositor = wl_registry_bind(registry, name, &wl_compositor_interface, version); 
+		display->compositor = wl_registry_bind(registry, name, &wl_compositor_interface, version); 
 		printf("Compositor found \n");
 		return;
 	}
 	if (strcmp(interface, "wl_shell")==0)
 	{
-		shell = wl_registry_bind(registry, name, &wl_shell_interface, version);
+		display->shell = wl_registry_bind(registry, name, &wl_shell_interface, version);
 		printf("Shell found\n");
 		return;
 	}
@@ -60,39 +72,37 @@ void global_object_removed(void* data, struct wl_registry *wl_registry, uint32_t
 	printf("Wayland global object removed: name=%i\n", name);
 };
 
-struct wl_registry_listener listener = {
-	global_object_available,
-	global_object_removed
-};
+
 
 int main(int argc, char **argv) {
 
-    display = wl_display_connect(NULL);
-    if (display == NULL) {
+	struct display display = { 0 };
+    display.display = wl_display_connect(NULL);
+    if (display.display == NULL) {
 		fprintf(stderr, "Can't connect to display\n");
 		exit(1);
     }
     printf("connected to display\n");
-	registry = wl_display_get_registry(display);
-	wl_registry_add_listener(registry, &listener, NULL); 
+	display.registry = wl_display_get_registry(display.display);
+	wl_registry_add_listener(display.registry, &listener, &display); 
 
-	wl_display_dispatch(display);
-	wl_display_roundtrip(display);
+	wl_display_dispatch(display.display);
+	wl_display_roundtrip(display.display);
 
-	if (compositor == NULL)
+	if (display.compositor == NULL)
 	{
 		printf("error: no compositor\n");
 		return -1;
 	}
 
-	surface = wl_compositor_create_surface(compositor);
+	surface = wl_compositor_create_surface(display.compositor);
 	if (surface == NULL)
 	{	
 		printf("Cannot create surface \n");
 		return -1;
 	}
 
-	shell_surface = wl_shell_get_shell_surface(shell, surface);
+	shell_surface = wl_shell_get_shell_surface(display.shell, surface);
 
 	if (shell_surface == NULL)
 	{	
@@ -102,7 +112,7 @@ int main(int argc, char **argv) {
 
 	wl_shell_surface_set_toplevel(shell_surface);	
 
-	eglDisplay = eglGetDisplay(display);
+	eglDisplay = eglGetDisplay((EGLNativeDisplayType)display.display);
 
 	if (eglDisplay == EGL_NO_DISPLAY)
 	{
@@ -151,11 +161,11 @@ int main(int argc, char **argv) {
 
 	glViewport(0,0,700,500);
 
-	glClearColor(1.0f,1.0f,0.0f,1.0f);
+	glClearColor(0.0f,1.0f,0.0f,1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 	eglSwapBuffers(eglDisplay, eglSurface);
 	getchar();
-    wl_display_disconnect(display);
+    wl_display_disconnect(display.display);
     printf("disconnected from display\n");
     
     exit(0);
