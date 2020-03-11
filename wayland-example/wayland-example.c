@@ -17,15 +17,17 @@ struct display {
 	struct wl_compositor *compositor;
 	struct wl_shell *shell;
 	struct wl_regisry* registry;
+	struct wl_egl_window * window;
+	struct wl_surface * surface;
+	struct wl_shell_surface* shell_surface;
 };
 
-struct wl_egl_window * window = NULL;
-struct wl_surface * surface = NULL;
-struct wl_shell_surface* shell_surface = NULL;
-EGLDisplay eglDisplay;
-EGLConfig* configs;
-EGLContext ctx;
-EGLSurface eglSurface; 
+struct egl {
+	EGLDisplay eglDisplay;
+	EGLConfig* configs;
+	EGLContext ctx;
+	EGLSurface eglSurface; 
+};
 
 EGLint configList[] = {
 			EGL_RED_SIZE, 8,
@@ -33,8 +35,8 @@ EGLint configList[] = {
 			EGL_BLUE_SIZE, 8,
 			EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
 			EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,	
-					EGL_NONE
-					};
+			EGL_NONE
+		};
 
 static const EGLint context_attribs[] = {
 		EGL_CONTEXT_CLIENT_VERSION, 2,
@@ -72,56 +74,53 @@ void global_object_removed(void* data, struct wl_registry *wl_registry, uint32_t
 	printf("Wayland global object removed: name=%i\n", name);
 };
 
-
-
-int main(int argc, char **argv) {
-
-	struct display display = { 0 };
-    display.display = wl_display_connect(NULL);
-    if (display.display == NULL) {
-		fprintf(stderr, "Can't connect to display\n");
+void initDisplayClient(struct display* display)
+{
+    display->display = wl_display_connect(NULL);
+    if (display->display == NULL) {
+		printf("Can't connect to display\n");
 		exit(1);
     }
     printf("connected to display\n");
-	display.registry = wl_display_get_registry(display.display);
-	wl_registry_add_listener(display.registry, &listener, &display); 
+	display->registry = wl_display_get_registry(display->display);
+	wl_registry_add_listener(display->registry, &listener, display); 
+	wl_display_dispatch(display->display);
+	wl_display_roundtrip(display->display);
 
-	wl_display_dispatch(display.display);
-	wl_display_roundtrip(display.display);
-
-	if (display.compositor == NULL)
+	if (display->compositor == NULL)
 	{
 		printf("error: no compositor\n");
-		return -1;
+		exit(1);
 	}
 
-	surface = wl_compositor_create_surface(display.compositor);
-	if (surface == NULL)
+	display->surface = wl_compositor_create_surface(display->compositor);
+	if (display->surface == NULL)
 	{	
 		printf("Cannot create surface \n");
-		return -1;
+		exit(1);
 	}
 
-	shell_surface = wl_shell_get_shell_surface(display.shell, surface);
-
-	if (shell_surface == NULL)
+	display->shell_surface = wl_shell_get_shell_surface(display->shell, display->surface);
+	if (display->shell_surface == NULL)
 	{	
 		printf("Cannot create shell surface \n");
-		return -1;
+		exit(1);   
 	}
+	wl_shell_surface_set_toplevel(display->shell_surface);	
+}
 
-	wl_shell_surface_set_toplevel(shell_surface);	
+void initEGL(struct display* display, struct egl* egl)
+{
+	egl->eglDisplay = eglGetDisplay((EGLNativeDisplayType)display->display);
 
-	eglDisplay = eglGetDisplay((EGLNativeDisplayType)display.display);
-
-	if (eglDisplay == EGL_NO_DISPLAY)
+	if (egl->eglDisplay == EGL_NO_DISPLAY)
 	{
 		printf("No egl display found\n");
 		exit(1);
 	}
 	printf("Creating egl display\n");
 
-	if (eglInitialize(eglDisplay, &major, &minor)!=EGL_TRUE)
+	if (eglInitialize(egl->eglDisplay, &major, &minor)!=EGL_TRUE)
 	{
 		printf("Cannot initialize egl\n");
 		exit(1);
@@ -131,42 +130,59 @@ int main(int argc, char **argv) {
 
 	EGLint maxConfigs, numConfigs;
 	numConfigs = 0;
-	if (eglGetConfigs(eglDisplay, NULL, 0, &maxConfigs)!=EGL_TRUE)
+	if (eglGetConfigs(egl->eglDisplay, NULL, 0, &maxConfigs)!=EGL_TRUE)
 	{
 		printf("Error determining egl configs\n");
 		exit(1);
 	}
 
 	printf("Max configs: %i\n", maxConfigs);
-	configs = (EGLConfig*)calloc((int)maxConfigs,sizeof(EGLConfig));
-	if (!eglChooseConfig(eglDisplay, configList, configs, maxConfigs,  &numConfigs))
+	egl->configs = (EGLConfig*)calloc((int)maxConfigs,sizeof(EGLConfig));
+	if (!eglChooseConfig(egl->eglDisplay, configList, egl->configs, maxConfigs,  &numConfigs))
 	{
 		GLenum e = glGetError();
 		printf("Error choosing egl configs: %i num configs: %i \n", e, numConfigs); 
 		exit(1);
 	}
 
-	ctx = eglCreateContext(eglDisplay, *configs, EGL_NO_CONTEXT, context_attribs);
-
-	window = wl_egl_window_create(surface,800,600);
-	eglSurface = eglCreateWindowSurface(eglDisplay, *configs, window, NULL);
+	egl->ctx = eglCreateContext(egl->eglDisplay, *egl->configs, EGL_NO_CONTEXT, context_attribs);
+	display->window = wl_egl_window_create(display->surface,800,600);
+	egl->eglSurface = eglCreateWindowSurface(egl->eglDisplay, *egl->configs, display->window, NULL);
 	
-	if (eglMakeCurrent(eglDisplay, eglSurface, eglSurface, ctx)==EGL_FALSE)
+	if (eglMakeCurrent(egl->eglDisplay, egl->eglSurface, egl->eglSurface, egl->ctx)==EGL_FALSE)
 	{
 		printf("Cant Make it current \n");
 		exit(1);	
 	} 	
-	
-	printf("success \n");
+}
 
+void closeDisplayClient(struct display* display)
+{
+    wl_display_disconnect(display->display);
+    printf("disconnected from display\n");
+}
+
+void closeEGL()
+{
+}
+
+void render(struct egl* egl)
+{
 	glViewport(0,0,700,500);
-
 	glClearColor(0.0f,1.0f,0.0f,1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
-	eglSwapBuffers(eglDisplay, eglSurface);
+	eglSwapBuffers(egl->eglDisplay, egl->eglSurface);
 	getchar();
-    wl_display_disconnect(display.display);
-    printf("disconnected from display\n");
-    
-    exit(0);
+}
+
+int main(int argc, char **argv) {
+
+	struct display display = { 0 };
+	struct egl egl = { 0 };
+	initDisplayClient(&display);
+	initEGL(&display, &egl);
+	render(&egl);
+	closeDisplayClient(&display);
+	
+	return 0;
 }

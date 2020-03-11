@@ -18,18 +18,17 @@ struct display {
 };
 
 struct egl {
-	EGLDisplay  egl_display;
-	EGLContext  egl_context;
-	EGLSurface  egl_surface;
+	EGLDisplay  eglDisplay;
+	EGLContext  eglContext;
+	EGLSurface  eglSurface;
 };
  
-EGLint attr[] = {       // some attributes to set up our egl-interface
+EGLint configList[] = {       // some attributes to set up our egl-interface
 	EGL_RED_SIZE, 8,
 	EGL_GREEN_SIZE, 8,
 	EGL_BLUE_SIZE, 8,
 	EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
-	EGL_RENDERABLE_TYPE,
-	EGL_OPENGL_ES2_BIT,
+	EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
 	EGL_NONE
    };
 
@@ -65,20 +64,20 @@ void initDisplayClient(struct display* display)
 
 void initEGL(struct display* display, struct egl* egl)
 {
-   egl->egl_display  =  eglGetDisplay( (EGLNativeDisplayType) display->x_display );
-   if ( egl->egl_display == EGL_NO_DISPLAY ) {
+   egl->eglDisplay  =  eglGetDisplay( (EGLNativeDisplayType) display->x_display );
+   if ( egl->eglDisplay == EGL_NO_DISPLAY ) {
       printf("Got no EGL display.");
       exit(1);
    }
  
-   if ( !eglInitialize( egl->egl_display, NULL, NULL ) ) {
+   if ( !eglInitialize( egl->eglDisplay, NULL, NULL ) ) {
       printf("Unable to initialize EGL");
       exit(1);
    }
  
    EGLConfig  ecfg;
    EGLint     num_config;
-   if ( !eglChooseConfig( egl->egl_display, attr, &ecfg, 1, &num_config ) ) {
+   if ( !eglChooseConfig( egl->eglDisplay, configList, &ecfg, 1, &num_config ) ) {
       printf("Failed to choose config eglError: %i \n", eglGetError());
       exit(1);
    }
@@ -88,8 +87,8 @@ void initEGL(struct display* display, struct egl* egl)
       exit(1);
    }
  
-   egl->egl_surface = eglCreateWindowSurface ( egl->egl_display, ecfg, display->x_window, NULL );
-   if ( egl->egl_surface == EGL_NO_SURFACE ) {
+   egl->eglSurface = eglCreateWindowSurface ( egl->eglDisplay, ecfg, display->x_window, NULL );
+   if ( egl->eglSurface == EGL_NO_SURFACE ) {
       printf("Unable to create EGL surface eglError: %i \n",eglGetError());
       exit(1);
    }
@@ -99,22 +98,22 @@ void initEGL(struct display* display, struct egl* egl)
       EGL_CONTEXT_CLIENT_VERSION, 2,
       EGL_NONE
    };
-   egl->egl_context = eglCreateContext ( egl->egl_display, ecfg, EGL_NO_CONTEXT, ctxattr );
-   if ( egl->egl_context == EGL_NO_CONTEXT ) {
+   egl->eglContext = eglCreateContext ( egl->eglDisplay, ecfg, EGL_NO_CONTEXT, ctxattr );
+   if ( egl->eglContext == EGL_NO_CONTEXT ) {
       printf("Unable to create EGL context eglError: %i \n" , eglGetError());
       exit(1);
    }
  
    //// associate the egl-context with the egl-surface
-   eglMakeCurrent( egl->egl_display, egl->egl_surface, egl->egl_surface, egl->egl_context );
+   eglMakeCurrent( egl->eglDisplay, egl->eglSurface, egl->eglSurface, egl->eglContext );
 
 }
 
 void closeEGL(struct egl* egl)
 {
-   eglDestroyContext ( egl->egl_display, egl->egl_context );
-   eglDestroySurface ( egl->egl_display, egl->egl_surface );
-   eglTerminate      ( egl->egl_display );
+   eglDestroyContext ( egl->eglDisplay, egl->eglContext );
+   eglDestroySurface ( egl->eglDisplay, egl->eglSurface );
+   eglTerminate      ( egl->eglDisplay );
 }
 
 void closeDisplayClient(struct display* display)
@@ -128,7 +127,7 @@ void render(struct egl* egl)
 	glViewport ( 0 , 0 , 100 , 100 );
 	glClearColor ( 0.0f , 1.0f , 0.07f , 1.0f);    // background color
 	glClear ( GL_COLOR_BUFFER_BIT );
-	eglSwapBuffers ( egl->egl_display, egl->egl_surface );  // get the rendered buffer to the screen
+	eglSwapBuffers ( egl->eglDisplay, egl->eglSurface );  // get the rendered buffer to the screen
 }
 
 int  main()
