@@ -10,8 +10,6 @@
 #include <EGL/egl.h>
 #include <GL/gl.h>
 
-EGLint major, minor;
-
 struct display {
 	struct wl_display *display;
 	struct wl_compositor *compositor;
@@ -26,7 +24,8 @@ struct egl {
 	EGLDisplay eglDisplay;
 	EGLConfig* configs;
 	EGLContext ctx;
-	EGLSurface eglSurface; 
+	EGLSurface eglSurface;
+	EGLint major, minor; 
 };
 
 EGLint configList[] = {
@@ -112,21 +111,19 @@ void initDisplayClient(struct display* display)
 void initEGL(struct display* display, struct egl* egl)
 {
 	egl->eglDisplay = eglGetDisplay((EGLNativeDisplayType)display->display);
-
 	if (egl->eglDisplay == EGL_NO_DISPLAY)
 	{
 		printf("No egl display found\n");
 		exit(1);
 	}
-	printf("Creating egl display\n");
 
-	if (eglInitialize(egl->eglDisplay, &major, &minor)!=EGL_TRUE)
+	if (eglInitialize(egl->eglDisplay, &egl->major, &egl->minor)!=EGL_TRUE)
 	{
 		printf("Cannot initialize egl\n");
 		exit(1);
 	}
 
-	printf("EGL major %i, minor %i\n",major, minor);
+	printf("EGL major %i, minor %i\n",egl->major, egl->minor);
 
 	EGLint maxConfigs, numConfigs;
 	numConfigs = 0;

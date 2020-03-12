@@ -19,8 +19,10 @@ struct display {
 
 struct egl {
 	EGLDisplay  eglDisplay;
+	EGLConfig*  configs;
 	EGLContext  eglContext;
 	EGLSurface  eglSurface;
+	EGLint major, minor;
 };
  
 EGLint configList[] = {       // some attributes to set up our egl-interface
@@ -64,31 +66,39 @@ void initDisplayClient(struct display* display)
 
 void initEGL(struct display* display, struct egl* egl)
 {
-   egl->eglDisplay  =  eglGetDisplay( (EGLNativeDisplayType) display->x_display );
-   if ( egl->eglDisplay == EGL_NO_DISPLAY ) {
-      printf("Got no EGL display.");
-      exit(1);
-   }
+    egl->eglDisplay  =  eglGetDisplay( (EGLNativeDisplayType) display->x_display );
+    if ( egl->eglDisplay == EGL_NO_DISPLAY ) 
+	{
+		  printf("Got no EGL display.");
+		  exit(1);
+    }
  
-   if ( !eglInitialize( egl->eglDisplay, NULL, NULL ) ) {
-      printf("Unable to initialize EGL");
-      exit(1);
-   }
+    if ( !eglInitialize( egl->eglDisplay, &egl->major, &egl->minor ) ) {
+		  printf("Unable to initialize EGL");
+		  exit(1);
+   	}
  
-   EGLConfig  ecfg;
-   EGLint     num_config;
-   if ( !eglChooseConfig( egl->eglDisplay, configList, &ecfg, 1, &num_config ) ) {
-      printf("Failed to choose config eglError: %i \n", eglGetError());
-      exit(1);
-   }
+	printf("EGL major %i, minor %i\n",egl->major, egl->minor);
+
+    EGLint maxConfigs, numConfigs;
+	numConfigs = 0;
+
+	if (eglGetConfigs(egl->eglDisplay, NULL, 0, &maxConfigs)!=EGL_TRUE)
+	{
+		printf("Error determining egl configs\n");
+		exit(1);
+	}
+
+	printf("Max configs: %i\n", maxConfigs);
+	egl->configs = (EGLConfig*)calloc((int)maxConfigs,sizeof(EGLConfig));
+    if ( !eglChooseConfig( egl->eglDisplay, configList, egl->configs, maxConfigs, &numConfigs ) ) {
+		GLenum e = glGetError();
+		printf("Error choosing egl configs: %i num configs: %i \n", e, numConfigs); 
+		exit(1);
+    }
  
-   if ( num_config != 1 ) {
-      printf("Didn't get exactly one config, but  %i \n", num_config);
-      exit(1);
-   }
- 
-   egl->eglSurface = eglCreateWindowSurface ( egl->eglDisplay, ecfg, display->x_window, NULL );
-   if ( egl->eglSurface == EGL_NO_SURFACE ) {
+    egl->eglSurface = eglCreateWindowSurface ( egl->eglDisplay, *egl->configs, display->x_window, NULL );
+    if ( egl->eglSurface == EGL_NO_SURFACE ) {
       printf("Unable to create EGL surface eglError: %i \n",eglGetError());
       exit(1);
    }
@@ -98,7 +108,7 @@ void initEGL(struct display* display, struct egl* egl)
       EGL_CONTEXT_CLIENT_VERSION, 2,
       EGL_NONE
    };
-   egl->eglContext = eglCreateContext ( egl->eglDisplay, ecfg, EGL_NO_CONTEXT, ctxattr );
+   egl->eglContext = eglCreateContext ( egl->eglDisplay, *egl->configs, EGL_NO_CONTEXT, ctxattr );
    if ( egl->eglContext == EGL_NO_CONTEXT ) {
       printf("Unable to create EGL context eglError: %i \n" , eglGetError());
       exit(1);
