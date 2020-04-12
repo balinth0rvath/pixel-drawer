@@ -13,6 +13,8 @@ PixelSurface::PixelSurface() {
 PixelSurface::~PixelSurface() {};
 
 void PixelSurface::initEGL() {
+
+	initDisplayClient();
     this->eglDisplay  =  eglGetDisplay( (EGLNativeDisplayType) this->xDisplay );
     if ( this->eglDisplay == EGL_NO_DISPLAY ) 
 	{
@@ -96,3 +98,19 @@ void PixelSurface::initDisplayClient() {
    XStoreName ( this->xDisplay , this->xWindow , "example" ); // give the window a name
 
 };
+
+void PixelSurface::closeEGL()
+{
+  	eglDestroyContext ( this->eglDisplay, this->eglContext );
+ 	eglDestroySurface ( this->eglDisplay, this->eglSurface );
+  	eglTerminate      ( this->eglDisplay );
+
+	closeDisplayClient();
+};
+
+void PixelSurface::closeDisplayClient()
+{
+   XDestroyWindow    ( this->xDisplay, this->xWindow );
+   XCloseDisplay     ( this->xDisplay );
+};
+
