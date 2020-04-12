@@ -22,7 +22,7 @@ private:
 	Window xWindow;
 
 	EGLDisplay eglDisplay;
-	std::unique_ptr<EGLConfig> configs;
+	std::vector<EGLConfig> configs;
 	EGLContext	eglContext;
 	EGLSurface 	eglSurface;
 	EGLint major;

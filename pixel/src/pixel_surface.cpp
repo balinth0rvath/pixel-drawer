@@ -35,35 +35,35 @@ void PixelSurface::initEGL() {
 		std::cout << "Error determining egl configs" << std::endl;
 		exit(1);
 	}
-/*
 	std::cout << "Max configs: " << maxConfigs << std::endl;
-	egl->configs = (EGLConfig*)calloc((int)maxConfigs,sizeof(EGLConfig));
-    if ( !eglChooseConfig( egl->eglDisplay, configList, egl->configs, maxConfigs, &numConfigs ) ) {
+
+//	egl->configs = (EGLConfig*)calloc((int)maxConfigs,sizeof(EGLConfig));
+	
+	this->configs.resize(maxConfigs);  
+
+    if ( !eglChooseConfig( this->eglDisplay, &this->configList.front(), &this->configs.front(), maxConfigs, &numConfigs ) ) {
 		GLenum e = glGetError();
 		printf("Error choosing egl configs: %i num configs: %i \n", e, numConfigs); 
 		exit(1);
     }
- 
-    egl->eglSurface = eglCreateWindowSurface ( egl->eglDisplay, *egl->configs, display->x_window, NULL );
-    if ( egl->eglSurface == EGL_NO_SURFACE ) {
-      printf("Unable to create EGL surface eglError: %i \n",eglGetError());
+    this->eglSurface = eglCreateWindowSurface ( this->eglDisplay, this->configs.front(), this->xWindow, NULL );
+    if ( this->eglSurface == EGL_NO_SURFACE ) {
+      std::cout << "Unable to create EGL surface eglError: " << eglGetError() << std::endl;
       exit(1);
    }
- 
    //// egl-contexts collect all state descriptions needed required for operation
    EGLint ctxattr[] = {
       EGL_CONTEXT_CLIENT_VERSION, 2,
       EGL_NONE
    };
-   egl->eglContext = eglCreateContext ( egl->eglDisplay, *egl->configs, EGL_NO_CONTEXT, ctxattr );
-   if ( egl->eglContext == EGL_NO_CONTEXT ) {
-      printf("Unable to create EGL context eglError: %i \n" , eglGetError());
+   this->eglContext = eglCreateContext ( this->eglDisplay, this->configs.front(), EGL_NO_CONTEXT, ctxattr );
+   if ( this->eglContext == EGL_NO_CONTEXT ) {
+      std::cout << "Unable to create EGL context eglError: " << eglGetError << std::endl;
       exit(1);
    }
  
    //// associate the egl-context with the egl-surface
-   eglMakeCurrent( egl->eglDisplay, egl->eglSurface, egl->eglSurface, egl->eglContext );
-*/
+   eglMakeCurrent( this->eglDisplay, this->eglSurface, this->eglSurface, this->eglContext );
 
 };
 void PixelSurface::initDisplayClient() {
