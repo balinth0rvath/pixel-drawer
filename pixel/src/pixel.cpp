@@ -1,5 +1,6 @@
 #include "src/pixel_surface.h"
 #include "src/pixel_gl_program_manager.h"
+#include "src/pixel_renderer.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -16,29 +17,19 @@
 
 int  main()
 {
-	PixelSurface s;
-	PixelGLProgramManager m;
-	s.initEGL();
-	m.init();
+	auto pixelGLProgramManager = std::make_unique<PixelGLProgramManager>();
+	auto pixelSurface = std::make_unique<PixelSurface>();
+	auto pixelRenderer = std::make_unique<PixelRenderer>();
+	pixelSurface->initEGL();
+	pixelGLProgramManager->init();
 
-	if (!m.getProgramObject())
+	if (!pixelGLProgramManager->getProgramObject())
 		return 1;
-	GLfloat vertices[] = { -1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-							1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
-							0.0f,-1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f};
-	glViewport ( 0 , 0 , 100 , 100 );
-	glClearColor ( 0.0f , 1.0f , 0.07f , 1.0f);    // background color
-	glClear ( GL_COLOR_BUFFER_BIT );
-	glUseProgram(m.getProgramObject());
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 28, vertices);
-	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 28, vertices+3);
-	glEnableVertexAttribArray(0);
-	glEnableVertexAttribArray(1);
 
-	glDrawArrays(GL_TRIANGLES, 0, 3);
-	eglSwapBuffers ( s.getEGLDisplay(), s.getEGLSurface() );  // get the rendered buffer to the screen
+	pixelRenderer->render(pixelGLProgramManager, pixelSurface);
+	
 	sleep(1); 
-	s.closeEGL();
+	pixelSurface->closeEGL();
 
 	return 0;
 }	
