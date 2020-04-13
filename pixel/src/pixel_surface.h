@@ -20,6 +20,10 @@ public:
 	PixelSurface& operator=(const PixelSurface& s) = delete;
 	PixelSurface& operator=(PixelSurface&& s) = delete;
 	~PixelSurface();
+
+	GLuint windowWidth=1280;
+	GLuint windowHeight=720;
+	GLfloat borderPercent=0.025;
 private: 
 	void initDisplayClient();
 	void closeDisplayClient();

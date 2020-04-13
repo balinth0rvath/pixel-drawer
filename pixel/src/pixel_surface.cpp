@@ -84,8 +84,8 @@ void PixelSurface::initDisplayClient() {
     this->xWindow  = XCreateWindow (   // create a window with the provided parameters
 		this->xDisplay, 
 		root,
-		50, 50, 
-		200, 200,   
+		0, 0, 
+		this->windowWidth, this->windowHeight,   
 		0,
 		CopyFromParent, 
 		InputOutput,
