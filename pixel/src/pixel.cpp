@@ -28,7 +28,7 @@ int  main()
 
 	pixelRenderer->render(pixelGLProgramManager, pixelSurface);
 	
-	sleep(1); 
+	sleep(5); 
 	pixelSurface->closeEGL();
 
 	return 0;

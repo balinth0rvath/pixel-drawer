@@ -13,7 +13,7 @@ void PixelRenderer::generateCanvas(const GLfloat& borderPercent, const GLuint& x
 			buffer.push_back((dx * x + dy * y) / 2.0);
 			buffer.push_back(dx * x);
 			buffer.push_back(dy * y);
-			buffer.push_back(1);	
+			buffer.push_back(1.0);	
 	};
 
 	for(GLuint x=0; x<this->xSize; x++)
