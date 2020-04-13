@@ -39,18 +39,22 @@ void PixelGLProgramManager::initShaders()
 	this->vertexShaderSource = 
 		   "#version 300 es								\n\
 			layout (location = 0) in vec4 vPosition;	\n\
+			layout (location = 1) in vec4 vColor;		\n\
+			out vec4 interpColor;						\n\
 			void main()									\n\
 			{											\n\
 				gl_Position = vPosition;				\n\
+			 	interpColor = vColor;					\n\
 			}";
 
 	this->fragmentShaderSource = 
 			"#version 300 es							\n\
 			precision mediump float;					\n\
+			in vec4 interpColor;						\n\
 			out vec4 fragColor;							\n\
 			void main()								 	\n\
 			{											\n\
-				fragColor = vec4 (1.0, 1.0, 0.0, 1.0);	\n\
+				fragColor = interpColor;				\n\
 			}";
 }
 
