@@ -30,7 +30,9 @@ int  main()
 	glClearColor ( 0.0f , 1.0f , 0.07f , 1.0f);    // background color
 	glClear ( GL_COLOR_BUFFER_BIT );
 	glUseProgram(m.getProgramObject());
-
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, vertices);
+	glEnableVertexAttribArray(0);
+	glDrawArrays(GL_TRIANGLES, 0, 3);
 	eglSwapBuffers ( s.getEGLDisplay(), s.getEGLSurface() );  // get the rendered buffer to the screen
 	sleep(1); 
 	s.closeEGL();
