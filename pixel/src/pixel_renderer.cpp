@@ -1,6 +1,6 @@
 #include "pixel_renderer.h"
 
-void PixelRenderer::generateCanvas(const GLfloat& borderPercent, const GLuint& xSize, const GLuint& ySize)
+void PixelRenderer::generateCanvas(const GLuint& xSize, const GLuint& ySize)
 {
 	this->xSize = xSize;
 	this->ySize = ySize;
@@ -8,12 +8,12 @@ void PixelRenderer::generateCanvas(const GLfloat& borderPercent, const GLuint& x
 	GLfloat dy = 2.0f / ySize; 
 	this->buffer.clear();
 
-	auto addZandColor=[&buffer = this->buffer, dx=dx, dy=dy](GLuint x, GLuint y){
+	auto addZandColor=[&buffer = this->buffer, dx=dx, dy=dy](GLuint x, GLuint y, int shift){
 			buffer.push_back(0.0f);
-			buffer.push_back((dx * x + dy * y) / 2.0);
-			buffer.push_back(dx * x);
-			buffer.push_back(dy * y);
-			buffer.push_back(1.0);	
+			buffer.push_back(0.5f);
+			buffer.push_back(0.5f);
+			buffer.push_back(0.5f);
+			buffer.push_back(0.0f);	
 	};
 
 	for(GLuint x=0; x<this->xSize; x++)
@@ -22,32 +22,32 @@ void PixelRenderer::generateCanvas(const GLfloat& borderPercent, const GLuint& x
 			this->buffer.push_back(dx * (x + borderPercent) - 1);
 	 		this->buffer.push_back(dy * (y + borderPercent) - 1);
 
-			addZandColor(x,y);
+			addZandColor(x,y,0);
 
 			this->buffer.push_back(dx * (x + 1 - borderPercent) - 1);
 	 		this->buffer.push_back(dy * (y + borderPercent) - 1);
 
-			addZandColor(x,y);
+			addZandColor(x,y,1);
 
 			this->buffer.push_back(dx * (x + 1 - borderPercent) - 1);
 	 		this->buffer.push_back(dy * (y + 1 - borderPercent)  - 1);
 			
-			addZandColor(x,y);	
+			addZandColor(x,y,0);	
 
 			this->buffer.push_back(dx * (x + borderPercent) - 1);
 	 		this->buffer.push_back(dy * (y + 1 - borderPercent) - 1);
 
-			addZandColor(x,y);
+			addZandColor(x,y,0);
 
 			this->buffer.push_back(dx * (x + borderPercent) - 1);
 	 		this->buffer.push_back(dy * (y + borderPercent) - 1);
 
-			addZandColor(x,y);
+			addZandColor(x,y,0);
 
 			this->buffer.push_back(dx * (x + 1 - borderPercent) - 1);
 	 		this->buffer.push_back(dy * (y + 1 - borderPercent)  - 1);
 			
-			addZandColor(x,y);	
+			addZandColor(x,y,1);	
 		}
 }
 
@@ -57,7 +57,7 @@ void PixelRenderer::render(const std::unique_ptr<PixelGLProgramManager>& pixelGL
 							1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
 							0.0f,-1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f};
 
-	generateCanvas(pixelSurface->borderPercent, this->xSize, this->ySize);	
+	generateCanvas(this->xSize, this->ySize);	
 	glViewport ( 0 , 0 , pixelSurface->windowWidth , pixelSurface->windowHeight );
 	glClearColor ( 0.1f , 0.1f , 0.1f , 0.1f);    // background color
 	glClear ( GL_COLOR_BUFFER_BIT );

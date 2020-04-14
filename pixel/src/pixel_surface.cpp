@@ -1,16 +1,68 @@
 #include "pixel_surface.h"
 
 PixelSurface::PixelSurface() {
-	this->configList = { 
+	this->attribList = { 
 	EGL_RED_SIZE, 8,
 	EGL_GREEN_SIZE, 8,
 	EGL_BLUE_SIZE, 8,
+	EGL_ALPHA_SIZE, 8,
 	EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
 	EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
 	EGL_NONE};
 }
 
 PixelSurface::~PixelSurface() {};
+
+void PixelSurface::logConfigs()
+{
+	std::map<std::string,EGLint> attribMap = {
+		{"EGL_CONFIG_ID", EGL_CONFIG_ID},
+		{"EGL_BUFFER_SIZE", EGL_BUFFER_SIZE},
+		{"EGL_RED_SIZE", EGL_RED_SIZE},
+		{"EGL_GREEN_SIZE", EGL_GREEN_SIZE},
+		{"EGL_BLUE_SIZE", EGL_BLUE_SIZE},
+		{"EGL_LUMINANCE_SIZE", EGL_LUMINANCE_SIZE},
+		{"EGL_ALPHA_SIZE", EGL_ALPHA_SIZE},
+		{"EGL_ALPHA_MASK_SIZE", EGL_ALPHA_MASK_SIZE},
+		{"EGL_BIND_TO_TEXTURE_RGB", EGL_BIND_TO_TEXTURE_RGB},
+		{"EGL_BIND_TO_TEXTURE_RGBA", EGL_BIND_TO_TEXTURE_RGBA},
+		{"EGL_COLOR_BUFFER_TYPE", EGL_COLOR_BUFFER_TYPE},
+		{"EGL_CONFIG_CAVEAT", EGL_CONFIG_CAVEAT},
+		{"EGL_CONFORMANT", EGL_CONFORMANT},
+		{"EGL_DEPTH_SIZE", EGL_DEPTH_SIZE},
+		{"EGL_LEVEL", EGL_LEVEL},
+		{"EGL_MAX_PBUFFER_WIDTH", EGL_MAX_PBUFFER_WIDTH},
+		{"EGL_MAX_PBUFFER_HEIGHT", EGL_MAX_PBUFFER_HEIGHT},
+		{"EGL_MAX_PBUFFER_PIXELS", EGL_MAX_PBUFFER_PIXELS},
+		{"EGL_MAX_SWAP_INTERVAL", EGL_MAX_SWAP_INTERVAL},
+		{"EGL_MIN_SWAP_INTERVAL", EGL_MIN_SWAP_INTERVAL},
+		{"EGL_NATIVE_RENDERABLE", EGL_NATIVE_RENDERABLE},
+		{"EGL_NATIVE_VISUAL_ID", EGL_NATIVE_VISUAL_ID},
+		{"EGL_NATIVE_VISUAL_TYPE", EGL_NATIVE_VISUAL_TYPE},
+		{"EGL_RENDERABLE_TYPE", EGL_RENDERABLE_TYPE},
+		{"EGL_SAMPLE_BUFFERS", EGL_SAMPLE_BUFFERS},
+		{"EGL_SAMPLES", EGL_SAMPLES},
+		{"EGL_STENCIL_SIZE", EGL_STENCIL_SIZE},
+		{"EGL_SURFACE_TYPE", EGL_SURFACE_TYPE},
+		{"EGL_TRANSPARENT_TYPE", EGL_TRANSPARENT_TYPE},
+		{"EGL_TRANSPARENT_RED_VALUE", EGL_TRANSPARENT_RED_VALUE},
+		{"EGL_TRANSPARENT_GREEN_VALUE", EGL_TRANSPARENT_GREEN_VALUE},
+		{"EGL_TRANSPARENT_BLUE_VALUE", EGL_TRANSPARENT_BLUE_VALUE}
+		
+	};
+	std::sort(this->configs.begin(), this->configs.end());
+	for(const auto& config : this->configs)
+	{
+		for(const auto& attrib :attribMap )
+		{ 
+			EGLint value;
+			eglGetConfigAttrib(this->eglDisplay, config, attrib.second, &value);
+			std::cout << attrib.first << ": " << value << std::endl;
+		}
+		getchar();
+	}
+
+}
 
 void PixelSurface::initEGL() {
 
@@ -39,21 +91,24 @@ void PixelSurface::initEGL() {
 	}
 	std::cout << "Max configs: " << maxConfigs << std::endl;
 
-//	egl->configs = (EGLConfig*)calloc((int)maxConfigs,sizeof(EGLConfig));
-	
 	this->configs.resize(maxConfigs);  
 
-    if ( !eglChooseConfig( this->eglDisplay, &this->configList.front(), &this->configs.front(), maxConfigs, &numConfigs ) ) {
+    if ( !eglChooseConfig( this->eglDisplay, &this->attribList.front(), &this->configs.front(), maxConfigs, &numConfigs ) ) {
 		GLenum e = glGetError();
 		printf("Error choosing egl configs: %i num configs: %i \n", e, numConfigs); 
 		exit(1);
     }
+
+	std::cout << "Available confis: " << numConfigs << std::endl;
+	this->configs.resize(numConfigs);  
+
+	logConfigs();
+
     this->eglSurface = eglCreateWindowSurface ( this->eglDisplay, this->configs.front(), this->xWindow, NULL );
     if ( this->eglSurface == EGL_NO_SURFACE ) {
       std::cout << "Unable to create EGL surface eglError: " << eglGetError() << std::endl;
       exit(1);
    }
-   //// egl-contexts collect all state descriptions needed required for operation
    EGLint ctxattr[] = {
       EGL_CONTEXT_CLIENT_VERSION, 2,
       EGL_NONE
@@ -64,7 +119,6 @@ void PixelSurface::initEGL() {
       exit(1);
    }
  
-   //// associate the egl-context with the egl-surface
    eglMakeCurrent( this->eglDisplay, this->eglSurface, this->eglSurface, this->eglContext );
 
 };

@@ -7,6 +7,8 @@
 #include <memory>
 #include <vector>
 #include <iostream>
+#include <map>
+#include <algorithm>
 
 class PixelSurface {
 public:
@@ -23,10 +25,11 @@ public:
 
 	GLuint windowWidth=1280;
 	GLuint windowHeight=720;
-	GLfloat borderPercent=0.025;
+
 private: 
 	void initDisplayClient();
 	void closeDisplayClient();
+	void logConfigs();
 	Display* xDisplay;
 	Window xWindow;
 
@@ -37,5 +40,5 @@ private:
 	EGLint major;
 	EGLint minor;
 
-	std::vector<EGLint> configList;
+	std::vector<EGLint> attribList;
 };
