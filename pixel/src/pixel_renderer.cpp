@@ -9,44 +9,53 @@ PixelRenderer::PixelRenderer()
 
 inline void PixelRenderer::addPixel(const int& x, const int& y)
 {
-	// 4.   x     x 3. 6.        
+	// 3.   x     x 2. 5.        
 	//           . 
 	//          . 
 	//         .
 	//        .  
 	//       .    
-	// 1. 5.x     x 2.
+	// 0. 4.x     x 1.
 
-	// 1
+	// 0
 	this->buffer.push_back(dx * (x + borderPercent) - 1);
 	this->buffer.push_back(dy * (y + borderPercent) - 1);
 
 	addZandColor(x,y,0);
-	// 2
+	// 1
 	this->buffer.push_back(dx * (x + 1 - borderPercent) - 1);
 	this->buffer.push_back(dy * (y + borderPercent) - 1);
 
 	addZandColor(x,y,0);
-	// 3	
+	// 2	
 	this->buffer.push_back(dx * (x + 1 - borderPercent) - 1);
 	this->buffer.push_back(dy * (y + 1 - borderPercent)  - 1);
 	
 	addZandColor(x,y,1);	
-	// 4
+	// 3
 	this->buffer.push_back(dx * (x + borderPercent) - 1);
 	this->buffer.push_back(dy * (y + 1 - borderPercent) - 1);
 
 	addZandColor(x,y,1);
-	// 5
+	// 4
 	this->buffer.push_back(dx * (x + borderPercent) - 1);
 	this->buffer.push_back(dy * (y + borderPercent) - 1);
 
 	addZandColor(x,y,0);
-	// 6
+	// 5
 	this->buffer.push_back(dx * (x + 1 - borderPercent) - 1);
 	this->buffer.push_back(dy * (y + 1 - borderPercent)  - 1);
 	
 	addZandColor(x,y,1);	
+
+}
+
+inline void PixelRenderer::drawPixel(const int& x, const int& y, const int& color)
+{
+	int offset = ((y * this->xSize) + x) *  6 * 7;
+	this->buffer[offset + 3 + 2*7] = 1.0f;
+	this->buffer[offset + 3 + 3*7] = 1.0f;
+	this->buffer[offset + 3 + 5*7] = 1.0f;
 
 }
 
@@ -65,9 +74,9 @@ void PixelRenderer::generateCanvas()
 {
 	this->buffer.clear();
 
-	for(GLuint x=0; x<this->xSize; x++)
+	for(GLuint y=0; y<this->ySize; y++)
 	{
-		for (GLuint y=0; y<this->ySize; y++)
+		for (GLuint x=0; x<this->xSize; x++)
 		{
 			addPixel(x,y);
 		}
@@ -86,6 +95,7 @@ void PixelRenderer::render(const std::unique_ptr<PixelGLProgramManager>& pixelGL
 	glEnableVertexAttribArray(1);
 
 	glDrawArrays(GL_TRIANGLES, 0, 7 * this->xSize * this->ySize);
+	drawPixel(5,3,1);
 	eglSwapBuffers ( pixelSurface->getEGLDisplay(), pixelSurface->getEGLSurface() );  // get the rendered buffer to the screen
 	return;
 }

@@ -8,9 +8,10 @@ class PixelRenderer {
 public:
 	PixelRenderer();
 	void render(const std::unique_ptr<PixelGLProgramManager>& pixelGLProgramManager, const std::unique_ptr<PixelSurface>& pixelSurface);
-	inline void addPixel(const int& x, const int& y);
+	void drawPixel(const int& x, const int& y, const int& color);
 private:
 	void generateCanvas();
+	inline void addPixel(const int& x, const int& y);
 	inline void addZandColor(const GLuint& x, const GLuint& y, const int& shift);
 	GLuint xSize = 64;
 	GLuint ySize = 36;
