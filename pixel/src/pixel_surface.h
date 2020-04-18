@@ -25,12 +25,12 @@ public:
 
 	GLuint windowWidth=1280;
 	GLuint windowHeight=720;
+	Display* xDisplay;
 
 private: 
 	void initDisplayClient();
 	void closeDisplayClient();
 	void logConfigs();
-	Display* xDisplay;
 	Window xWindow;
 
 	EGLDisplay eglDisplay;

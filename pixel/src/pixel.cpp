@@ -27,8 +27,33 @@ int  main()
 		return 1;
 
 	pixelRenderer->render(pixelGLProgramManager, pixelSurface);
+
+	int shouldStop=0;
+	for (;!shouldStop;)
+	{
+		XEvent e;
+		XNextEvent(pixelSurface->xDisplay, &e);
+		switch (e.type)
+		{
+			case 2:
 	
-	sleep(5); 
+			std::cout << "Keycode: " << e.xkey.keycode << std::endl;
+			if (e.xkey.keycode==9)
+			{
+				shouldStop=1;
+			}	
+			break;
+		
+			case 6:
+			std::cout << "mouse event: " << e.type << std::endl;
+			break;
+
+			default:
+			break;
+
+		}
+	}
+	
 	pixelSurface->closeEGL();
 
 	return 0;

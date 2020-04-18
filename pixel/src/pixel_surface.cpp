@@ -59,7 +59,7 @@ void PixelSurface::logConfigs()
 			eglGetConfigAttrib(this->eglDisplay, config, attrib.second, &value);
 			std::cout << attrib.first << ": " << value << std::endl;
 		}
-		getchar();
+		//getchar();
 	}
 
 }

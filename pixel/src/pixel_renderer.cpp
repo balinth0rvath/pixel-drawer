@@ -53,10 +53,6 @@ void PixelRenderer::generateCanvas(const GLuint& xSize, const GLuint& ySize)
 
 void PixelRenderer::render(const std::unique_ptr<PixelGLProgramManager>& pixelGLProgramManager, const std::unique_ptr<PixelSurface>& pixelSurface) 
 {
-	buffer = { -1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-							1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
-							0.0f,-1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f};
-
 	generateCanvas(this->xSize, this->ySize);	
 	glViewport ( 0 , 0 , pixelSurface->windowWidth , pixelSurface->windowHeight );
 	glClearColor ( 0.1f , 0.1f , 0.1f , 0.1f);    // background color

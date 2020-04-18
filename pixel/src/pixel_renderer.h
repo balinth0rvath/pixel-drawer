@@ -11,6 +11,6 @@ private:
 	GLuint ySize = 36;
 	
 	std::vector<GLfloat> buffer;
-	GLfloat borderPercent=0.0;
+	GLfloat borderPercent=0.05;
 };
 
