@@ -13,9 +13,12 @@ PixelController::PixelController(std::unique_ptr<PixelRenderer>& pixelRenderer,
 
 void PixelController::eventLoop()
 {
-	struct timeval startRenderTime, endRenderTime, endEventTime;
+	struct timeval startRenderTime, endRenderTime;
 	int shouldStop=0;
-	
+
+	uint8_t counter=0;
+	uint32_t sumRenderTime=0;
+		
 	pixelRenderer->drawPixel(5,3,0x0000ff);
 	for (;!shouldStop;)
 	{
@@ -49,10 +52,22 @@ void PixelController::eventLoop()
 
 			}
 		}
-		gettimeofday(&endEventTime, NULL);
-		std::cout << " outer Elapsed render time: " << (endRenderTime.tv_usec - startRenderTime.tv_usec) << std::endl;
-
-		std::cout << "Elapsed event time: " << (endEventTime.tv_usec - endRenderTime.tv_usec) << std::endl;
+		
+		counter++;
+		uint32_t start = startRenderTime.tv_usec; 	
+		uint32_t end = endRenderTime.tv_usec; 	
+		if (end > start)
+		{
+			sumRenderTime+=	(end - start);
+		}
+		
+		if (!counter)
+		{
+			counter=0;
+			double fps = 1000000.0f / (double)(sumRenderTime >> 8);
+			std::cout << "Render time: " << (sumRenderTime >> 8) << " usec" << " FPS: " << fps << std::endl;
+			sumRenderTime = 0;		
+		}
 
 	}
 
