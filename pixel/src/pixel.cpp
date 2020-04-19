@@ -22,7 +22,7 @@ int  main()
 	if (!pixelGLProgramManager->getProgramObject())
 		return 1;
 
-	pixelRenderer->generateCanvas(6,4, 0x808080);
+	pixelRenderer->generateCanvas(64,32, 0x202020);
 	pixelController->eventLoop();
 	pixelSurface->closeEGL();
 

@@ -11,6 +11,53 @@ PixelController::PixelController(std::unique_ptr<PixelRenderer>& pixelRenderer,
 
 }
 
+void PixelController::processKeyCode(const int& keycode, int& shouldStop)
+{
+	switch (keycode)
+	{
+		case X11_ESC:
+			shouldStop=1;
+			break;
+		case X11_SPACE:
+			pixelRenderer->clearPixel(cursorX,cursorY);
+			break;
+		case X11_KEY_UP:
+			if (this->pixelRenderer->getYSize()-1 > cursorY) 
+			{ 
+				pixelRenderer->clearPixel(cursorX,cursorY);
+				cursorY+= 1; 
+				pixelRenderer->drawPixel(cursorX,cursorY,cursorColor);
+			}
+			break;
+		case X11_KEY_DOWN:
+			if (cursorY != 0)
+			{
+				pixelRenderer->clearPixel(cursorX,cursorY);
+				cursorY-= 1;
+				pixelRenderer->drawPixel(cursorX,cursorY,cursorColor);
+			}
+			break;
+		case X11_KEY_LEFT:
+			if (cursorX != 0)
+			{
+				pixelRenderer->clearPixel(cursorX,cursorY);
+				cursorX-= 1;
+				pixelRenderer->drawPixel(cursorX,cursorY,cursorColor);
+			}
+			break;
+		case X11_KEY_RIGHT:
+			if (this->pixelRenderer->getXSize()-1 > cursorX)
+			{
+				pixelRenderer->clearPixel(cursorX,cursorY);
+				cursorX+= 1;
+				pixelRenderer->drawPixel(cursorX,cursorY,cursorColor);
+			}
+			break;
+		default:
+			break;
+	}
+}
+
 void PixelController::eventLoop()
 {
 	struct timeval startRenderTime, endRenderTime;
@@ -19,7 +66,7 @@ void PixelController::eventLoop()
 	uint8_t counter=0;
 	uint32_t sumRenderTime=0;
 		
-	pixelRenderer->drawPixel(5,3,0x0000ff);
+	pixelRenderer->drawPixel(cursorX,cursorY,cursorColor);
 	for (;!shouldStop;)
 	{
 		gettimeofday(&startRenderTime, NULL);
@@ -34,14 +81,8 @@ void PixelController::eventLoop()
 				case 2:
 		
 				std::cout << "Keycode: " << e.xkey.keycode << std::endl;
-				if (e.xkey.keycode==9)
-				{
-					shouldStop=1;
-				}	
-				if (e.xkey.keycode==114)
-				{
-					pixelRenderer->clearPixel(5,3);
-				}
+				processKeyCode(e.xkey.keycode, shouldStop);
+
 				break;
 				case 6:
 				std::cout << "mouse event: " << e.type << std::endl;
