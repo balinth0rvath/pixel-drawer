@@ -1,6 +1,4 @@
-#include <memory>
-#include <unistd.h>
-#include <sys/time.h>
+#include "src/pixel_common_headers.h"
 #include "src/pixel_gl_program_manager.h"
 #include "src/pixel_surface.h"
 

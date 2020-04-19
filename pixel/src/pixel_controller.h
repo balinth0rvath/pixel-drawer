@@ -1,0 +1,4 @@
+class PixelController {
+
+	PixelController();
+};

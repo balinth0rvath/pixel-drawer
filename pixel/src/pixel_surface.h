@@ -1,14 +1,5 @@
 #pragma once
-#include  <X11/Xlib.h>
-#include  <X11/Xatom.h>
-#include <X11/Xutil.h>
-#include <GLES2/gl2.h>
-#include <EGL/egl.h>
-#include <memory>
-#include <vector>
-#include <iostream>
-#include <map>
-#include <algorithm>
+#include "pixel_common_headers.h"
 
 class PixelSurface {
 public:
