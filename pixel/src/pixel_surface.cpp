@@ -133,7 +133,7 @@ void PixelSurface::initDisplayClient() {
     Window root  =  DefaultRootWindow( this->xDisplay );
  
     XSetWindowAttributes  swa;
-    swa.event_mask  =  ExposureMask | PointerMotionMask | KeyPressMask;
+    swa.event_mask  =  ExposureMask | PointerMotionMask | KeyPressMask | ButtonPressMask;
  
     this->xWindow  = XCreateWindow (   // create a window with the provided parameters
 		this->xDisplay, 

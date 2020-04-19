@@ -76,21 +76,25 @@ void PixelController::eventLoop()
 		{
 			XEvent e;
 			XNextEvent(pixelSurface->xDisplay, &e);
+			std::cout << "event" << std::endl;
 			switch (e.type)
 			{
 				case 2:
 		
-				std::cout << "Keycode: " << e.xkey.keycode << std::endl;
-				processKeyCode(e.xkey.keycode, shouldStop);
+					std::cout << "xkey event: " << e.xkey.keycode << std::endl;
+					processKeyCode(e.xkey.keycode, shouldStop);
 
 				break;
+				case 4:
+					std::cout << "xbuttonpress event button=" << e.xbutton.button << std::endl;
+					break;	
 				case 6:
-				std::cout << "mouse event: " << e.type << std::endl;
-				break;
+					std::cout << "xmotion event x=" << e.xmotion.x << " y=" << e.xmotion.y << " xroot=" << e.xmotion.x_root << " yroot=" << e.xmotion.y_root << std::endl;
+
+					break;
 
 				default:
-				break;
-
+					break;
 			}
 		}
 		
