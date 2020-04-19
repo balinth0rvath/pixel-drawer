@@ -2,12 +2,21 @@
 
 PixelRenderer::PixelRenderer()
 {
-	this->dx = 2.0f / this->xSize;
-	this->dy = 2.0f / this->ySize;
-	generateCanvas();	
 }
 
-inline void PixelRenderer::addPixel(const int& x, const int& y)
+void PixelRenderer::generateCanvas(const GLuint & xSize, const GLuint& ySize, const GLuint& backgroundColor) 
+{
+	this->xSize = xSize;
+	this->ySize = ySize;
+	this->dx = 2.0f / this->xSize;
+	this->dy = 2.0f / this->ySize;
+	this->colorBuffer = std::vector<GLuint>( xSize * ySize, backgroundColor );
+	this->backgroundColor = backgroundColor;
+	generateVertexBuffer();	
+
+}
+
+inline void PixelRenderer::addPixel(const GLuint& x, const GLuint& y)
 {
 	// 3.   x     x 2. 5.        
 	//           . 
@@ -18,61 +27,92 @@ inline void PixelRenderer::addPixel(const int& x, const int& y)
 	// 0. 4.x     x 1.
 
 	// 0
-	this->buffer.push_back(dx * (x + borderPercent) - 1);
-	this->buffer.push_back(dy * (y + borderPercent) - 1);
+	this->vertexBuffer.push_back(dx * (x + borderPercent) - 1);
+	this->vertexBuffer.push_back(dy * (y + borderPercent) - 1);
 
 	addZandColor(x,y,0);
 	// 1
-	this->buffer.push_back(dx * (x + 1 - borderPercent) - 1);
-	this->buffer.push_back(dy * (y + borderPercent) - 1);
+	this->vertexBuffer.push_back(dx * (x + 1 - borderPercent) - 1);
+	this->vertexBuffer.push_back(dy * (y + borderPercent) - 1);
 
 	addZandColor(x,y,0);
 	// 2	
-	this->buffer.push_back(dx * (x + 1 - borderPercent) - 1);
-	this->buffer.push_back(dy * (y + 1 - borderPercent)  - 1);
+	this->vertexBuffer.push_back(dx * (x + 1 - borderPercent) - 1);
+	this->vertexBuffer.push_back(dy * (y + 1 - borderPercent)  - 1);
 	
-	addZandColor(x,y,1);	
+	addZandColor(x,y,this->colorBuffer[ x + y * this->xSize]);	
 	// 3
-	this->buffer.push_back(dx * (x + borderPercent) - 1);
-	this->buffer.push_back(dy * (y + 1 - borderPercent) - 1);
+	this->vertexBuffer.push_back(dx * (x + borderPercent) - 1);
+	this->vertexBuffer.push_back(dy * (y + 1 - borderPercent) - 1);
 
-	addZandColor(x,y,1);
+	addZandColor(x,y,this->colorBuffer[ x + y * this->xSize]);
 	// 4
-	this->buffer.push_back(dx * (x + borderPercent) - 1);
-	this->buffer.push_back(dy * (y + borderPercent) - 1);
+	this->vertexBuffer.push_back(dx * (x + borderPercent) - 1);
+	this->vertexBuffer.push_back(dy * (y + borderPercent) - 1);
 
 	addZandColor(x,y,0);
 	// 5
-	this->buffer.push_back(dx * (x + 1 - borderPercent) - 1);
-	this->buffer.push_back(dy * (y + 1 - borderPercent)  - 1);
+	this->vertexBuffer.push_back(dx * (x + 1 - borderPercent) - 1);
+	this->vertexBuffer.push_back(dy * (y + 1 - borderPercent)  - 1);
 	
-	addZandColor(x,y,1);	
+	addZandColor(x,y,this->colorBuffer[ x + y * this->xSize]);	
 
 }
 
-inline void PixelRenderer::drawPixel(const int& x, const int& y, const int& color)
+void PixelRenderer::drawPixel(const GLuint& x, const GLuint& y, const GLuint& color)
 {
+	this->colorBuffer[y * this->xSize + x] = color;
+
 	int offset = ((y * this->xSize) + x) *  6 * 7;
-	this->buffer[offset + 3 + 2*7] = 1.0f;
-	this->buffer[offset + 3 + 3*7] = 1.0f;
-	this->buffer[offset + 3 + 5*7] = 1.0f;
+	this->vertexBuffer[offset + 3 + 2*7] = getRed(color);
+	this->vertexBuffer[offset + 3 + 3*7] = getRed(color);
+	this->vertexBuffer[offset + 3 + 5*7] = getRed(color);
+	this->vertexBuffer[offset + 4 + 2*7] = getGreen(color);
+	this->vertexBuffer[offset + 4 + 3*7] = getGreen(color);
+	this->vertexBuffer[offset + 4 + 5*7] = getGreen(color);
+	this->vertexBuffer[offset + 5 + 2*7] = getBlue(color);
+	this->vertexBuffer[offset + 5 + 3*7] = getBlue(color);
+	this->vertexBuffer[offset + 5 + 5*7] = getBlue(color);
 
 }
 
-inline void PixelRenderer::addZandColor(const GLuint& x, const GLuint& y, const int& shift)
+void PixelRenderer::clearPixel(const GLuint& x, const GLuint& y)
 {
-	double s = (double)shift;
-	double off = 0.1f;
-	this->buffer.push_back(0.0f);
-	this->buffer.push_back(off + s * 0.5f);
-	this->buffer.push_back(off + s * 0.5f);
-	this->buffer.push_back(off + s * 0.5f);
-	this->buffer.push_back(1.0f);	
+	drawPixel(x,y,this->backgroundColor);
 }
 
-void PixelRenderer::generateCanvas()
+inline GLfloat PixelRenderer::getRed(const GLuint& color)
 {
-	this->buffer.clear();
+	GLuint tmp = color >> 16;
+	uint8_t red = (uint8_t) tmp;
+	return (GLfloat)red / 0xff;
+}
+
+inline GLfloat PixelRenderer::getGreen(const GLuint& color)
+{
+	GLuint tmp = (color >> 8) & 0xff;
+	uint8_t green = (uint8_t) tmp;
+	return (GLfloat)green / 0xff;
+}
+
+inline GLfloat PixelRenderer::getBlue(const GLuint& color)
+{
+	uint8_t blue = (uint8_t) (color & 0xff);
+	return (GLfloat)blue / 0xff;
+}
+
+inline void PixelRenderer::addZandColor(const GLuint& x, const GLuint& y, const GLuint& color)
+{
+	this->vertexBuffer.push_back(0.0f);
+	this->vertexBuffer.push_back(getRed(color));
+	this->vertexBuffer.push_back(getGreen(color));
+	this->vertexBuffer.push_back(getBlue(color));
+	this->vertexBuffer.push_back(1.0f);	
+}
+
+void PixelRenderer::generateVertexBuffer()
+{
+	this->vertexBuffer = std::vector<GLfloat>(0); 
 
 	for(GLuint y=0; y<this->ySize; y++)
 	{
@@ -89,13 +129,13 @@ void PixelRenderer::render(const std::unique_ptr<PixelGLProgramManager>& pixelGL
 	glClearColor ( 0.1f , 0.1f , 0.1f , 0.1f);    // background color
 	glClear ( GL_COLOR_BUFFER_BIT );
 	glUseProgram(pixelGLProgramManager->getProgramObject());
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 28, &buffer[0]);
-	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 28, &buffer[0]+3);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 28, &vertexBuffer[0]);
+	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 28, &vertexBuffer[0]+3);
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
 
 	glDrawArrays(GL_TRIANGLES, 0, 7 * this->xSize * this->ySize);
-	drawPixel(5,3,1);
-	eglSwapBuffers ( pixelSurface->getEGLDisplay(), pixelSurface->getEGLSurface() );  // get the rendered buffer to the screen
+
+	eglSwapBuffers ( pixelSurface->getEGLDisplay(), pixelSurface->getEGLSurface() );  // get the rendered vertexBuffer to the screen
 	return;
 }
