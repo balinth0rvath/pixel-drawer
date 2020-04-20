@@ -14,8 +14,8 @@ public:
 	PixelSurface& operator=(PixelSurface&& s) = delete;
 	~PixelSurface();
 
-	GLuint windowWidth=1280;
-	GLuint windowHeight=720;
+	GLuint windowWidth=1360;
+	GLuint windowHeight=800;
 	Display* xDisplay;
 
 private: 

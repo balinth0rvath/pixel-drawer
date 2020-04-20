@@ -19,7 +19,7 @@ void PixelController::processButton(const int& pointerX,
 	cursorX = pixelRenderer->getXSize() * ((GLfloat)pointerX / (GLfloat)(pixelSurface->windowWidth));
 	cursorY = pixelRenderer->getYSize() * ((GLfloat)(pixelSurface->windowHeight - pointerY) / (GLfloat)(pixelSurface->windowHeight));
 	pixelRenderer->focusPixel(cursorX, cursorY);
-	pixelRenderer->drawPixel(cursorX, cursorY, 0xffff00);
+	pixelRenderer->drawPixel(cursorX, cursorY, currentColor);
 
 }
 
@@ -65,6 +65,15 @@ void PixelController::processKeyCode(const int& keycode, int& shouldStop)
 				pixelRenderer->focusPixel(cursorX,cursorY);
 			}
 			break;
+		case X11_KEY_1:
+			this->currentColor ^= (0xff << 0x10);
+		break;
+		case X11_KEY_2:
+			this->currentColor ^= (0xff << 0x08);
+		break;
+		case X11_KEY_3:
+			this->currentColor ^= (0xff);
+		break;
 		default:
 			break;
 	}

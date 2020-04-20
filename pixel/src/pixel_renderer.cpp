@@ -97,8 +97,17 @@ void PixelRenderer::changePixelColor(const GLuint& x, const GLuint& y, const GLu
 
 void PixelRenderer::drawPixel(const GLuint& x, const GLuint& y, const GLuint& color)
 {
-	this->colorBuffer[y * this->xSize + x] = color;
-	changePixelColor(x,y,color);
+	GLuint index = y * this->xSize + x;
+
+	if (this->colorBuffer[index] == this->backgroundColor)
+	{ 
+		this->colorBuffer[index] = color;
+		changePixelColor(x,y,color);
+	} else
+	{
+		this->colorBuffer[index] = this->backgroundColor;
+		changePixelColor(x,y,this->backgroundColor);
+	}
 }
 
 void PixelRenderer::clearPixel(const GLuint& x, const GLuint& y)

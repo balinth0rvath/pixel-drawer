@@ -7,6 +7,9 @@
 #define X11_KEY_DOWN 	0x74
 #define X11_SPACE 		0x41
 #define X11_ESC 		0x09
+#define X11_KEY_1		0x0a
+#define X11_KEY_2		0x0b
+#define X11_KEY_3		0x0c
 
 class PixelController {
 public:
@@ -26,6 +29,7 @@ private:
 
 	GLuint cursorX=0;
 	GLuint cursorY=0;
+	GLuint currentColor=0x0;
 };
 
 
