@@ -58,11 +58,31 @@ inline void PixelRenderer::addPixel(const GLuint& x, const GLuint& y)
 	addZandColor(x,y,this->colorBuffer[ x + y * this->xSize]);	
 
 }
-
-void PixelRenderer::drawPixel(const GLuint& x, const GLuint& y, const GLuint& color)
+void PixelRenderer::focusPixel(const GLuint& x, const GLuint& y)
 {
-	this->colorBuffer[y * this->xSize + x] = color;
+	changePixelShadow(x,y,this->cursorColor);
+}
+void PixelRenderer::unfocusPixel(const GLuint& x, const GLuint& y)
+{
+	changePixelShadow(x,y,this->shadowColor);
+}
+	
+void PixelRenderer::changePixelShadow(const GLuint& x, const GLuint& y, const GLuint& color)
+{
+	int offset = ((y * this->xSize) + x) *  6 * 7;
+	this->vertexBuffer[offset + 3 + 0*7] = getRed(color);
+	this->vertexBuffer[offset + 3 + 1*7] = getRed(color);
+	this->vertexBuffer[offset + 3 + 4*7] = getRed(color);
+	this->vertexBuffer[offset + 4 + 0*7] = getGreen(color);
+	this->vertexBuffer[offset + 4 + 1*7] = getGreen(color);
+	this->vertexBuffer[offset + 4 + 4*7] = getGreen(color);
+	this->vertexBuffer[offset + 5 + 0*7] = getBlue(color);
+	this->vertexBuffer[offset + 5 + 1*7] = getBlue(color);
+	this->vertexBuffer[offset + 5 + 4*7] = getBlue(color);
+}
 
+void PixelRenderer::changePixelColor(const GLuint& x, const GLuint& y, const GLuint& color)
+{
 	int offset = ((y * this->xSize) + x) *  6 * 7;
 	this->vertexBuffer[offset + 3 + 2*7] = getRed(color);
 	this->vertexBuffer[offset + 3 + 3*7] = getRed(color);
@@ -73,12 +93,18 @@ void PixelRenderer::drawPixel(const GLuint& x, const GLuint& y, const GLuint& co
 	this->vertexBuffer[offset + 5 + 2*7] = getBlue(color);
 	this->vertexBuffer[offset + 5 + 3*7] = getBlue(color);
 	this->vertexBuffer[offset + 5 + 5*7] = getBlue(color);
+}
 
+void PixelRenderer::drawPixel(const GLuint& x, const GLuint& y, const GLuint& color)
+{
+	this->colorBuffer[y * this->xSize + x] = color;
+	changePixelColor(x,y,color);
 }
 
 void PixelRenderer::clearPixel(const GLuint& x, const GLuint& y)
 {
-	drawPixel(x,y,this->backgroundColor);
+	this->colorBuffer[y * this->xSize + x] = backgroundColor;
+	changePixelColor(x,y,this->backgroundColor);
 }
 
 inline GLfloat PixelRenderer::getRed(const GLuint& color)

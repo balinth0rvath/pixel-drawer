@@ -11,6 +11,18 @@ PixelController::PixelController(std::unique_ptr<PixelRenderer>& pixelRenderer,
 
 }
 
+void PixelController::processButton(const int& pointerX, 	
+									const int& pointerY, 		
+									const int& button)
+{
+	pixelRenderer->unfocusPixel(cursorX, cursorY);
+	cursorX = pixelRenderer->getXSize() * ((GLfloat)pointerX / (GLfloat)(pixelSurface->windowWidth));
+	cursorY = pixelRenderer->getYSize() * ((GLfloat)(pixelSurface->windowHeight - pointerY) / (GLfloat)(pixelSurface->windowHeight));
+	pixelRenderer->focusPixel(cursorX, cursorY);
+	pixelRenderer->drawPixel(cursorX, cursorY, 0xffff00);
+
+}
+
 void PixelController::processKeyCode(const int& keycode, int& shouldStop)
 {
 	switch (keycode)
@@ -19,38 +31,38 @@ void PixelController::processKeyCode(const int& keycode, int& shouldStop)
 			shouldStop=1;
 			break;
 		case X11_SPACE:
-			pixelRenderer->clearPixel(cursorX,cursorY);
+			pixelRenderer->unfocusPixel(cursorX,cursorY);
 			break;
 		case X11_KEY_UP:
 			if (this->pixelRenderer->getYSize()-1 > cursorY) 
 			{ 
-				pixelRenderer->clearPixel(cursorX,cursorY);
+				pixelRenderer->unfocusPixel(cursorX,cursorY);
 				cursorY+= 1; 
-				pixelRenderer->drawPixel(cursorX,cursorY,cursorColor);
+				pixelRenderer->focusPixel(cursorX,cursorY);
 			}
 			break;
 		case X11_KEY_DOWN:
 			if (cursorY != 0)
 			{
-				pixelRenderer->clearPixel(cursorX,cursorY);
+				pixelRenderer->unfocusPixel(cursorX,cursorY);
 				cursorY-= 1;
-				pixelRenderer->drawPixel(cursorX,cursorY,cursorColor);
+				pixelRenderer->focusPixel(cursorX,cursorY);
 			}
 			break;
 		case X11_KEY_LEFT:
 			if (cursorX != 0)
 			{
-				pixelRenderer->clearPixel(cursorX,cursorY);
+				pixelRenderer->unfocusPixel(cursorX,cursorY);
 				cursorX-= 1;
-				pixelRenderer->drawPixel(cursorX,cursorY,cursorColor);
+				pixelRenderer->focusPixel(cursorX,cursorY);
 			}
 			break;
 		case X11_KEY_RIGHT:
 			if (this->pixelRenderer->getXSize()-1 > cursorX)
 			{
-				pixelRenderer->clearPixel(cursorX,cursorY);
+				pixelRenderer->unfocusPixel(cursorX,cursorY);
 				cursorX+= 1;
-				pixelRenderer->drawPixel(cursorX,cursorY,cursorColor);
+				pixelRenderer->focusPixel(cursorX,cursorY);
 			}
 			break;
 		default:
@@ -66,7 +78,7 @@ void PixelController::eventLoop()
 	uint8_t counter=0;
 	uint32_t sumRenderTime=0;
 		
-	pixelRenderer->drawPixel(cursorX,cursorY,cursorColor);
+	pixelRenderer->focusPixel(cursorX,cursorY);
 	for (;!shouldStop;)
 	{
 		gettimeofday(&startRenderTime, NULL);
@@ -87,10 +99,11 @@ void PixelController::eventLoop()
 				break;
 				case 4:
 					std::cout << "xbuttonpress event button=" << e.xbutton.button << std::endl;
+					processButton(e.xbutton.x, e.xbutton.y, e.xbutton.button);
 					break;	
 				case 6:
 					std::cout << "xmotion event x=" << e.xmotion.x << " y=" << e.xmotion.y << " xroot=" << e.xmotion.x_root << " yroot=" << e.xmotion.y_root << std::endl;
-
+					
 					break;
 
 				default:

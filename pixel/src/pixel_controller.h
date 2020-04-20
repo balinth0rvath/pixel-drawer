@@ -17,13 +17,15 @@ public:
 	void eventLoop();
 private:
 	void processKeyCode(const int& keycode, int& shouldStop);
+	void processButton( const int& pointerX, 
+						const int& pointerY, 		
+						const int& button);
 	const std::unique_ptr<PixelRenderer>& pixelRenderer;
 	const std::unique_ptr<PixelSurface>& pixelSurface;
 	const std::unique_ptr<PixelGLProgramManager>& pixelGLProgramManager;
 
 	GLuint cursorX=0;
 	GLuint cursorY=0;
-	const GLuint cursorColor = 0xffff00;
 };
 
 
