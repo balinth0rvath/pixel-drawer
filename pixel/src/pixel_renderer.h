@@ -15,9 +15,14 @@ public:
 	void generateCanvas(const GLuint& xSize, const GLuint& ySize, const GLuint& backgroundColor);
 	inline GLuint getXSize() { return this->xSize; };
 	inline GLuint getYSize() { return this->ySize; };
+	void setSphereVisible();
+	void setSphereInvisible();
+	void changeSphereVisibility();
 
 private:
-	void generateVertexBuffer();
+	void generateVertexBufferMatrix();
+	void generateVertexBufferSphere();
+	void generateVertexBuffers();
 	inline void addPixel(const GLuint& x, const GLuint& y);
 	inline void addZandColor(const GLuint& x, const GLuint& y, const GLuint& shift);
 	inline void changePixelColor(const GLuint& x, const GLuint& y, const GLuint& color);
@@ -31,8 +36,11 @@ private:
 	GLfloat dy = 0.0f;
 	
 	std::vector<GLuint> colorBuffer;
-	std::vector<GLfloat> vertexBuffer;
+	std::vector<GLfloat> vertexBufferMatrix;
+	std::vector<GLfloat> vertexBufferSphere;
 	
+	GLuint sphereVisible = 1;
+
 	GLfloat borderPercent=0.05;
 	GLuint backgroundColor = 0x0;
 	GLuint cursorColor = 0x333333;

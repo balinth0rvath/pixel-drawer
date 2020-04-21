@@ -31,7 +31,7 @@ void PixelController::processKeyCode(const int& keycode, int& shouldStop)
 			shouldStop=1;
 			break;
 		case X11_SPACE:
-			pixelRenderer->unfocusPixel(cursorX,cursorY);
+			pixelRenderer->changeSphereVisibility();
 			break;
 		case X11_KEY_UP:
 			if (this->pixelRenderer->getYSize()-1 > cursorY) 
