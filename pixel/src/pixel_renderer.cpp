@@ -10,8 +10,8 @@ void PixelRenderer::generateCanvas(const GLuint & xSize, const GLuint& ySize, co
 {
 	this->xSize = xSize;
 	this->ySize = ySize;
-	this->dx = 2.0f / this->xSize;
-	this->dy = 2.0f / this->ySize;
+	this->dx =  2.0f / this->xSize;
+	this->dy =  2.0f / this->ySize;
 	this->colorBuffer = std::vector<GLuint>( xSize * ySize, backgroundColor );
 	this->backgroundColor = backgroundColor;
 	generateVertexBuffers();	
@@ -29,33 +29,33 @@ inline void PixelRenderer::addPixel(const GLuint& x, const GLuint& y)
 	// 0. 4.x     x 1.
 
 	// 0
-	this->vertexBufferMatrix.push_back(dx * (x + borderPercent) - 1);
-	this->vertexBufferMatrix.push_back(dy * (y + borderPercent) - 1);
+	this->vertexBufferMatrix.push_back(mag * dx * (x + borderPercent) - mag);
+	this->vertexBufferMatrix.push_back(mag * dy * (y + borderPercent) - mag);
 
 	addZandColor(x,y,0);
 	// 1
-	this->vertexBufferMatrix.push_back(dx * (x + 1 - borderPercent) - 1);
-	this->vertexBufferMatrix.push_back(dy * (y + borderPercent) - 1);
+	this->vertexBufferMatrix.push_back(mag * dx * (x + 1 - borderPercent) - mag);
+	this->vertexBufferMatrix.push_back(mag * dy * (y + borderPercent) - mag);
 
 	addZandColor(x,y,0);
 	// 2	
-	this->vertexBufferMatrix.push_back(dx * (x + 1 - borderPercent) - 1);
-	this->vertexBufferMatrix.push_back(dy * (y + 1 - borderPercent)  - 1);
+	this->vertexBufferMatrix.push_back(mag * dx * (x + 1 - borderPercent) - mag);
+	this->vertexBufferMatrix.push_back(mag * dy * (y + 1 - borderPercent)  - mag);
 	
 	addZandColor(x,y,this->colorBuffer[ x + y * this->xSize]);	
 	// 3
-	this->vertexBufferMatrix.push_back(dx * (x + borderPercent) - 1);
-	this->vertexBufferMatrix.push_back(dy * (y + 1 - borderPercent) - 1);
+	this->vertexBufferMatrix.push_back(mag * dx * (x + borderPercent) - mag);
+	this->vertexBufferMatrix.push_back(mag * dy * (y + 1 - borderPercent) - mag);
 
 	addZandColor(x,y,this->colorBuffer[ x + y * this->xSize]);
 	// 4
-	this->vertexBufferMatrix.push_back(dx * (x + borderPercent) - 1);
-	this->vertexBufferMatrix.push_back(dy * (y + borderPercent) - 1);
+	this->vertexBufferMatrix.push_back(mag * dx * (x + borderPercent) - mag);
+	this->vertexBufferMatrix.push_back(mag * dy * (y + borderPercent) - mag);
 
 	addZandColor(x,y,0);
 	// 5
-	this->vertexBufferMatrix.push_back(dx * (x + 1 - borderPercent) - 1);
-	this->vertexBufferMatrix.push_back(dy * (y + 1 - borderPercent)  - 1);
+	this->vertexBufferMatrix.push_back(mag * dx * (x + 1 - borderPercent) - mag);
+	this->vertexBufferMatrix.push_back(mag * dy * (y + 1 - borderPercent)  - mag);
 	
 	addZandColor(x,y,this->colorBuffer[ x + y * this->xSize]);	
 
@@ -140,7 +140,7 @@ inline GLfloat PixelRenderer::getBlue(const GLuint& color)
 
 inline void PixelRenderer::addZandColor(const GLuint& x, const GLuint& y, const GLuint& color)
 {
-	this->vertexBufferMatrix.push_back(0.0f);
+	this->vertexBufferMatrix.push_back(-5.0f);
 	this->vertexBufferMatrix.push_back(getRed(color));
 	this->vertexBufferMatrix.push_back(getGreen(color));
 	this->vertexBufferMatrix.push_back(getBlue(color));
@@ -164,9 +164,9 @@ void PixelRenderer::generateVertexBufferSphere()
 {
 	//this->vertexBufferSphere = std::vector<GLfloat>(0);
 	
-	this->vertexBufferSphere = {0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-								1.0f, 1.0f,-1.0f,-1.0f, 1.0f, 0.0f, 1.0f,
-								1.0f, 0.0f,-1.0f,-1.0f, 0.0f, 1.0f, 1.0f};
+	this->vertexBufferSphere = { 0.0f,-0.5f,-6.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+								-0.45f, 0.4f,-6.0f, 1.0f, 1.0f, 0.0f, 1.0f,
+								 0.45f, 0.4f,-6.0f, 1.0f, 0.0f, 1.0f, 1.0f};
 }
 
 void PixelRenderer::generateVertexBuffers()
@@ -207,7 +207,9 @@ void PixelRenderer::render(const std::unique_ptr<PixelGLProgramManager>& pixelGL
 	glEnableVertexAttribArray(1);
 
 	glm::mat4 baseModel(1.0f);
+	glm::mat4 noProjection(1.0f);
 	glUniformMatrix4fv(pixelGLProgramManager->getUniformModel(), 1, GL_FALSE, glm::value_ptr(baseModel));
+	glUniformMatrix4fv(pixelGLProgramManager->getUniformProjection(), 1, GL_FALSE, glm::value_ptr(sphereProjection));
 
 	glDrawArrays(GL_TRIANGLES, 0, 6 * this->xSize * this->ySize);
 
@@ -217,7 +219,7 @@ void PixelRenderer::render(const std::unique_ptr<PixelGLProgramManager>& pixelGL
 		glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 28, &vertexBufferSphere[0]+3);
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
-		sphereModel = glm::rotate(baseModel, 1.1f, glm::vec3(0.0f,0.0f,1.0f));
+		sphereModel = glm::rotate(sphereModel, 0.02f, glm::vec3(0.0f,0.0f,1.0f));
 		glUniformMatrix4fv(pixelGLProgramManager->getUniformModel(), 1, GL_FALSE, glm::value_ptr(sphereModel));
 		glUniformMatrix4fv(pixelGLProgramManager->getUniformProjection(), 1, GL_FALSE, glm::value_ptr(sphereProjection));
 		glDrawArrays(GL_TRIANGLES, 0, 3 );

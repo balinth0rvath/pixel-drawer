@@ -45,6 +45,7 @@ private:
 	GLuint backgroundColor = 0x0;
 	GLuint cursorColor = 0x333333;
 	GLuint shadowColor = 0x000000;
+	GLfloat mag = 2.8;
 
 	glm::mat4 sphereModel;
 	glm::mat4 sphereProjection;
