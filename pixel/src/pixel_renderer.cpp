@@ -1,7 +1,9 @@
 #include "pixel_renderer.h"
 
-PixelRenderer::PixelRenderer()
+PixelRenderer::PixelRenderer(const std::unique_ptr<PixelSurface>& pixelSurface)
 {
+	this->sphereModel = glm::mat4(1.0f);
+	this->sphereProjection = glm::perspective(45.0f, (GLfloat)pixelSurface->windowWidth/(GLfloat)pixelSurface->windowHeight, 0.1f, 100.0f);
 }
 
 void PixelRenderer::generateCanvas(const GLuint & xSize, const GLuint& ySize, const GLuint& backgroundColor) 
@@ -163,8 +165,8 @@ void PixelRenderer::generateVertexBufferSphere()
 	//this->vertexBufferSphere = std::vector<GLfloat>(0);
 	
 	this->vertexBufferSphere = {0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-								1.0f, 1.0f,-1.0f, 0.0f, 1.0f, 0.0f, 1.0f,
-								1.0f, 0.0f,-1.0f, 0.0f, 0.0f, 1.0f, 1.0f};
+								1.0f, 1.0f,-1.0f,-1.0f, 1.0f, 0.0f, 1.0f,
+								1.0f, 0.0f,-1.0f,-1.0f, 0.0f, 1.0f, 1.0f};
 }
 
 void PixelRenderer::generateVertexBuffers()
@@ -193,13 +195,19 @@ void PixelRenderer::render(const std::unique_ptr<PixelGLProgramManager>& pixelGL
 {
 	glViewport ( 0 , 0 , pixelSurface->windowWidth , pixelSurface->windowHeight );
 	glClearColor ( 0.1f , 0.1f , 0.1f , 0.1f);    // background color
-	glClear ( GL_COLOR_BUFFER_BIT );
+
+	glEnable(GL_DEPTH_TEST);
+
+	glClear ( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 	glUseProgram(pixelGLProgramManager->getProgramObject());
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 28, &vertexBufferMatrix[0]);
 	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 28, &vertexBufferMatrix[0]+3);
 
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
+
+	glm::mat4 baseModel(1.0f);
+	glUniformMatrix4fv(pixelGLProgramManager->getUniformModel(), 1, GL_FALSE, glm::value_ptr(baseModel));
 
 	glDrawArrays(GL_TRIANGLES, 0, 6 * this->xSize * this->ySize);
 
@@ -209,6 +217,9 @@ void PixelRenderer::render(const std::unique_ptr<PixelGLProgramManager>& pixelGL
 		glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 28, &vertexBufferSphere[0]+3);
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
+		sphereModel = glm::rotate(baseModel, 1.1f, glm::vec3(0.0f,0.0f,1.0f));
+		glUniformMatrix4fv(pixelGLProgramManager->getUniformModel(), 1, GL_FALSE, glm::value_ptr(sphereModel));
+		glUniformMatrix4fv(pixelGLProgramManager->getUniformProjection(), 1, GL_FALSE, glm::value_ptr(sphereProjection));
 		glDrawArrays(GL_TRIANGLES, 0, 3 );
 
 	} 

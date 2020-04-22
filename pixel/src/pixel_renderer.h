@@ -5,7 +5,7 @@
 
 class PixelRenderer {
 public:
-	PixelRenderer();
+	PixelRenderer(const std::unique_ptr<PixelSurface>& pixelSurface);
 	void render(const std::unique_ptr<PixelGLProgramManager>& pixelGLProgramManager, const std::unique_ptr<PixelSurface>& pixelSurface);
 	void drawPixel(const GLuint& x, const GLuint& y, const GLuint& color);
 	void clearPixel(const GLuint& x, const GLuint& y);
@@ -45,5 +45,8 @@ private:
 	GLuint backgroundColor = 0x0;
 	GLuint cursorColor = 0x333333;
 	GLuint shadowColor = 0x000000;
+
+	glm::mat4 sphereModel;
+	glm::mat4 sphereProjection;
 };
 

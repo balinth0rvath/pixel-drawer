@@ -37,14 +37,15 @@ const GLuint PixelGLProgramManager::loadShader(const GLenum& type, const std::st
 void PixelGLProgramManager::initShaders()
 {
 	this->vertexShaderSource = 
-		   "#version 300 es								\n\
-			layout (location = 0) in vec4 vPosition;	\n\
-			layout (location = 1) in vec4 vColor;		\n\
-			out vec4 interpColor;						\n\
-			void main()									\n\
-			{											\n\
-				gl_Position = vPosition;				\n\
-			 	interpColor = vColor;					\n\
+		   "#version 300 es													\n\
+			layout (location = 0) in vec3 vPos;								\n\
+			layout (location = 1) in vec4 vColor;							\n\
+			out vec4 interpColor;											\n\
+			uniform mat4 model;												\n\
+			void main()														\n\
+			{																\n\
+				gl_Position = model * vec4(vPos.x, vPos.y, vPos.z, 1.0);    \n\
+			 	interpColor = vColor;										\n\
 			}";
 
 	this->fragmentShaderSource = 
@@ -90,6 +91,8 @@ const int PixelGLProgramManager::init()
 		glDeleteProgram(this->programObject);
 		return 0;
 	}
+	this->uniformModel = glGetUniformLocation(this->programObject, "model");
+	this->uniformProjection = glGetUniformLocation(this->programObject, "projection");
 	std::cout << "Program created successfuly" << std::endl;
 	return 1;
 }

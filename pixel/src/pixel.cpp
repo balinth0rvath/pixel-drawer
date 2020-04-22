@@ -4,13 +4,12 @@
 #include "src/pixel_renderer.h"
 #include "src/pixel_controller.h"
 
-
 int  main()
 {
 	auto pixelGLProgramManager = std::make_unique<PixelGLProgramManager>();
 	auto pixelSurface = std::make_unique<PixelSurface>();
 
-	auto pixelRenderer = std::make_unique<PixelRenderer>();
+	auto pixelRenderer = std::make_unique<PixelRenderer>(pixelSurface);
 	auto pixelController = std::make_unique<PixelController>(
 								pixelRenderer, 
 								pixelSurface,
@@ -22,7 +21,7 @@ int  main()
 	if (!pixelGLProgramManager->getProgramObject())
 		return 1;
 
-	pixelRenderer->generateCanvas(4,2, 0x202020);
+	pixelRenderer->generateCanvas(64,32, 0x202020);
 	pixelController->eventLoop();
 	pixelSurface->closeEGL();
 

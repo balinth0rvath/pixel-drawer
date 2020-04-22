@@ -6,11 +6,14 @@ class PixelGLProgramManager {
 public:
 	PixelGLProgramManager();
 	const GLuint getProgramObject() { return this->programObject; };
+	const GLuint getUniformModel() { return this->uniformModel; };
+	const GLuint getUniformProjection() { return this->uniformProjection; };
 	const int init();
 	
 private:
 	GLuint programObject;
-	
+	GLuint uniformModel;	
+	GLuint uniformProjection;	
 	std::string vertexShaderSource;
 	std::string fragmentShaderSource;
 	
