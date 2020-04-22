@@ -2,6 +2,7 @@
 #include "src/pixel_common_headers.h"
 #include "src/pixel_gl_program_manager.h"
 #include "src/pixel_surface.h"
+#include "src/pixel_animation.h"
 
 class PixelRenderer {
 public:
@@ -18,6 +19,8 @@ public:
 	void setSphereVisible();
 	void setSphereInvisible();
 	void changeSphereVisibility();
+	
+	std::unique_ptr<PixelAnimation> pixelAnimation = nullptr;
 
 private:
 	void generateVertexBufferMatrix();
@@ -47,7 +50,6 @@ private:
 	GLuint shadowColor = 0x000000;
 	GLfloat mag = 2.8;
 
-	glm::mat4 sphereModel;
-	glm::mat4 sphereProjection;
+
 };
 

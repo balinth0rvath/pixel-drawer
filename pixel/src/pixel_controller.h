@@ -1,5 +1,6 @@
 #include "src/pixel_common_headers.h"
 #include "src/pixel_renderer.h"
+#include "src/pixel_animation.h"
 
 #define X11_KEY_UP 		0x6f
 #define X11_KEY_LEFT 	0x71

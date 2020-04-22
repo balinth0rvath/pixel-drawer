@@ -45,7 +45,7 @@ void PixelGLProgramManager::initShaders()
 			uniform mat4 projection;													\n\
 			void main()																	\n\
 			{																			\n\
-				gl_Position = model * projection * vec4(vPos.x, vPos.y, vPos.z, 1.0);   \n\
+				gl_Position = projection * model * vec4(vPos, 1.0);  					 \n\
 			 	interpColor = vColor;													\n\
 			}";
 

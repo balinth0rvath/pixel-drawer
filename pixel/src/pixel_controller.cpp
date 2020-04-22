@@ -31,7 +31,14 @@ void PixelController::processKeyCode(const int& keycode, int& shouldStop)
 			shouldStop=1;
 			break;
 		case X11_SPACE:
-			pixelRenderer->changeSphereVisibility();
+			if (pixelRenderer->pixelAnimation->getSphereAnimationState() == PixelAnimationState::stoppedFront)
+			{
+				pixelRenderer->pixelAnimation->pushSphereBack();
+			}	 	
+			if (pixelRenderer->pixelAnimation->getSphereAnimationState() == PixelAnimationState::stoppedAway)
+			{
+				pixelRenderer->pixelAnimation->pullSphereFront();
+			}
 			break;
 		case X11_KEY_UP:
 			if (this->pixelRenderer->getYSize()-1 > cursorY) 
