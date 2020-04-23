@@ -43,8 +43,9 @@ private:
 	std::vector<GLfloat> vertexBufferMatrix;
 	std::vector<GLfloat> vertexBufferSphere;
 	std::vector<GLubyte> indexBufferSphere;
-	
+	const GLfloat sphereSize = 1.0f;	
 	GLuint sphereVisible = 1;
+	
 
 	GLfloat borderPercent=0.05;
 	GLuint backgroundColor = 0x0;

@@ -167,25 +167,62 @@ void PixelRenderer::generateVertexBufferMatrix()
 
 void PixelRenderer::generateVertexBufferSphere()
 {
-	//this->vertexBufferSphere = std::vector<GLfloat>(0);
-	
-	this->vertexBufferSphere = {-1.0f,-1.0f,-1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-								 1.0f,-1.0f,-1.0f, 0.0f, 1.0f, 0.0f, 1.0f,
-								 1.0f, 1.0f,-1.0f, 0.0f, 0.0f, 1.0f, 1.0f,
-								-1.0f, 1.0f,-1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
-								-1.0f,-1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
-								 1.0f,-1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f,
-								 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f,
-								-1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f};
+	this->vertexBufferSphere = std::vector<GLfloat>(0);
+	this->indexBufferSphere = std::vector<GLubyte>(0);
 
-	this->indexBufferSphere = { 
-								0,1,2,0,2,3,
-								1,2,6,1,5,6,
-								4,5,6,4,7,6,
-								0,3,4,3,4,7,
-								0,1,5,0,4,5,
-								2,3,6,3,7,6,
-								};
+	for(GLuint invert = 0; invert < 2; ++invert)
+		for(GLuint zetaIndex = 0; zetaIndex<4; ++zetaIndex)
+			for(GLuint alphaIndex =0; alphaIndex<12; ++alphaIndex)
+			{
+				GLfloat x = sphereSize * cos((GLfloat)alphaIndex * 2 * M_PI / 12.0f) * 
+										 cos((GLfloat)zetaIndex * M_PI / 6.0f);
+				this->vertexBufferSphere.push_back(x);
+
+				GLfloat y = sphereSize * sin((GLfloat)alphaIndex * 2 * M_PI / 12.0f) *
+										 cos((GLfloat)zetaIndex * M_PI / 6.0f);
+				this->vertexBufferSphere.push_back(y);
+
+				GLfloat z = sphereSize * sin((GLfloat)zetaIndex * M_PI / 6.0f);
+				if (invert)
+					this->vertexBufferSphere.push_back(-1.0f * z);
+				else
+					this->vertexBufferSphere.push_back(z);
+			
+				this->vertexBufferSphere.push_back((GLfloat)(rand() % 255)/255.0f);
+				this->vertexBufferSphere.push_back((GLfloat)(rand() % 255)/255.0f);
+				this->vertexBufferSphere.push_back((GLfloat)(rand() % 255)/255.0f);
+				this->vertexBufferSphere.push_back(1.0f);
+
+
+			}
+
+	for (GLuint invert = 0; invert < 2; ++invert)
+		for (GLuint zetaIndex = 0; zetaIndex<3; ++zetaIndex)
+			for (GLuint alphaIndex = 0; alphaIndex<12; ++alphaIndex)
+			{
+				GLuint invertOffset = invert * 48;
+				GLuint overflowAlphaIndex = (alphaIndex==11) ? 0 : alphaIndex + 1;			
+
+				this->indexBufferSphere.push_back(invertOffset +
+						12 * zetaIndex + alphaIndex);
+
+				this->indexBufferSphere.push_back(invertOffset +
+						12 * zetaIndex + overflowAlphaIndex);
+
+				this->indexBufferSphere.push_back(invertOffset +
+						12 * (zetaIndex + 1 ) + alphaIndex);
+
+				this->indexBufferSphere.push_back(invertOffset +
+						12 * zetaIndex + overflowAlphaIndex);
+
+				this->indexBufferSphere.push_back(invertOffset +
+						12 * (zetaIndex + 1 ) + alphaIndex );
+
+				this->indexBufferSphere.push_back(invertOffset +
+						12 * (zetaIndex + 1 ) + overflowAlphaIndex );
+
+		}
+	
 }
 
 void PixelRenderer::generateVertexBuffers()
@@ -245,7 +282,7 @@ void PixelRenderer::render(const std::unique_ptr<PixelGLProgramManager>& pixelGL
 		pixelAnimation->rotateSphere();
 		glUniformMatrix4fv(pixelGLProgramManager->getUniformModel(), 1, GL_FALSE, glm::value_ptr(sphereModel));
 		glUniformMatrix4fv(pixelGLProgramManager->getUniformProjection(), 1, GL_FALSE, glm::value_ptr(pixelAnimation->getSphereProjection()));
-		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_BYTE, &indexBufferSphere[0]);
+		glDrawElements(GL_TRIANGLES, 6 *  72, GL_UNSIGNED_BYTE, &indexBufferSphere[0]);
 
 	} 
 

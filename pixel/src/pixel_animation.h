@@ -22,7 +22,7 @@ private:
 	glm::mat4 sphereProjection;
 	PixelAnimationState pixelAnimationState;
 	const GLfloat animationSpeed = 0.4f;
-	const GLfloat maxDistance = -4.0f;
+	const GLfloat maxDistance = -14.0f;
 	const GLfloat minDistance = -3.0f;
 };
 
