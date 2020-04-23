@@ -42,6 +42,7 @@ private:
 	std::vector<GLuint> colorBuffer;
 	std::vector<GLfloat> vertexBufferMatrix;
 	std::vector<GLfloat> vertexBufferSphere;
+	std::vector<GLubyte> indexBufferSphere;
 	
 	GLuint sphereVisible = 1;
 

@@ -169,9 +169,23 @@ void PixelRenderer::generateVertexBufferSphere()
 {
 	//this->vertexBufferSphere = std::vector<GLfloat>(0);
 	
-	this->vertexBufferSphere = {  0.0f,-0.5f,0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-								-0.45f, 0.4f,0.0f, 1.0f, 1.0f, 0.0f, 1.0f,
-								 0.45f, 0.4f,0.0f, 1.0f, 0.0f, 1.0f, 1.0f};
+	this->vertexBufferSphere = {-1.0f,-1.0f,-1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+								 1.0f,-1.0f,-1.0f, 0.0f, 1.0f, 0.0f, 1.0f,
+								 1.0f, 1.0f,-1.0f, 0.0f, 0.0f, 1.0f, 1.0f,
+								-1.0f, 1.0f,-1.0f, 1.0f, 1.0f, 1.0f, 1.0f,
+								-1.0f,-1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f,
+								 1.0f,-1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f,
+								 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f,
+								-1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f};
+
+	this->indexBufferSphere = { 
+								0,1,2,0,2,3,
+								1,2,6,1,5,6,
+								4,5,6,4,7,6,
+								0,3,4,3,4,7,
+								0,1,5,0,4,5,
+								2,3,6,3,7,6,
+								};
 }
 
 void PixelRenderer::generateVertexBuffers()
@@ -227,11 +241,11 @@ void PixelRenderer::render(const std::unique_ptr<PixelGLProgramManager>& pixelGL
 		glm::mat4 sphereModel(1.0f);
 		pixelAnimation->animateSphere();
 		sphereModel = glm::translate(sphereModel, pixelAnimation->getSpherePosition());
-		sphereModel = glm::rotate(sphereModel, pixelAnimation->getSphereRotation(), glm::vec3(1.0f,0.0f,0.0f));
+		sphereModel = glm::rotate(sphereModel, pixelAnimation->getSphereRotation(), glm::vec3(1.0f,1.0f,0.0f));
 		pixelAnimation->rotateSphere();
 		glUniformMatrix4fv(pixelGLProgramManager->getUniformModel(), 1, GL_FALSE, glm::value_ptr(sphereModel));
 		glUniformMatrix4fv(pixelGLProgramManager->getUniformProjection(), 1, GL_FALSE, glm::value_ptr(pixelAnimation->getSphereProjection()));
-		glDrawArrays(GL_TRIANGLES, 0, 3 );
+		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_BYTE, &indexBufferSphere[0]);
 
 	} 
 
