@@ -9,7 +9,7 @@ int  main()
 	auto pixelGLProgramManager = std::make_unique<PixelGLProgramManager>();
 	auto pixelSurface = std::make_unique<PixelSurface>();
 
-	auto pixelRenderer = std::make_unique<PixelRenderer>(pixelSurface);
+	auto pixelRenderer = std::make_unique<PixelRenderer>();
 	auto pixelController = std::make_unique<PixelController>(
 								pixelRenderer, 
 								pixelSurface,
@@ -22,6 +22,7 @@ int  main()
 		return 1;
 
 	pixelRenderer->generateCanvas(32,32, 0x202020);
+	pixelRenderer->generateSphere(pixelSurface);
 	pixelController->eventLoop();
 	pixelSurface->closeEGL();
 

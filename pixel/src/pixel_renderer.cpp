@@ -1,8 +1,14 @@
 #include "pixel_renderer.h"
 
-PixelRenderer::PixelRenderer(const std::unique_ptr<PixelSurface>& pixelSurface)
+PixelRenderer::PixelRenderer()
+{
+}
+
+
+void PixelRenderer::generateSphere(const std::unique_ptr<PixelSurface>& pixelSurface)
 {
 	this->pixelAnimation = std::make_unique<PixelAnimation>(pixelSurface);
+	generateVertexBufferSphere();
 }
 
 void PixelRenderer::generateCanvas(const GLuint & xSize, const GLuint& ySize, const GLuint& backgroundColor) 
@@ -13,7 +19,7 @@ void PixelRenderer::generateCanvas(const GLuint & xSize, const GLuint& ySize, co
 	this->dy =  2.0f / this->ySize;
 	this->colorBuffer = std::vector<GLuint>( xSize * ySize, backgroundColor );
 	this->backgroundColor = backgroundColor;
-	generateVertexBuffers();	
+	generateVertexBufferMatrix();	
 
 }
 
@@ -163,7 +169,7 @@ void PixelRenderer::generateVertexBufferSphere()
 {
 	//this->vertexBufferSphere = std::vector<GLfloat>(0);
 	
-	this->vertexBufferSphere = { 0.0f,-0.5f,0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+	this->vertexBufferSphere = {  0.0f,-0.5f,0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
 								-0.45f, 0.4f,0.0f, 1.0f, 1.0f, 0.0f, 1.0f,
 								 0.45f, 0.4f,0.0f, 1.0f, 0.0f, 1.0f, 1.0f};
 }

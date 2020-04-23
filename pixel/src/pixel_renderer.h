@@ -6,7 +6,7 @@
 
 class PixelRenderer {
 public:
-	PixelRenderer(const std::unique_ptr<PixelSurface>& pixelSurface);
+	PixelRenderer();
 	void render(const std::unique_ptr<PixelGLProgramManager>& pixelGLProgramManager, const std::unique_ptr<PixelSurface>& pixelSurface);
 	void drawPixel(const GLuint& x, const GLuint& y, const GLuint& color);
 	void clearPixel(const GLuint& x, const GLuint& y);
@@ -14,6 +14,7 @@ public:
 	void unfocusPixel(const GLuint& x, const GLuint& y);
 
 	void generateCanvas(const GLuint& xSize, const GLuint& ySize, const GLuint& backgroundColor);
+	void generateSphere(const std::unique_ptr<PixelSurface>& pixelSurface);
 	inline GLuint getXSize() { return this->xSize; };
 	inline GLuint getYSize() { return this->ySize; };
 	void setSphereVisible();
