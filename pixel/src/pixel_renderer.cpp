@@ -188,9 +188,24 @@ void PixelRenderer::generateVertexBufferSphere()
 				else
 					this->vertexBufferSphere.push_back(z);
 			
-				this->vertexBufferSphere.push_back((GLfloat)(rand() % 255)/255.0f);
-				this->vertexBufferSphere.push_back((GLfloat)(rand() % 255)/255.0f);
-				this->vertexBufferSphere.push_back((GLfloat)(rand() % 255)/255.0f);
+				GLfloat red = cos((GLfloat)alphaIndex * 2 * M_PI / (12.0f )); 
+				if (red > 0.0f)
+					this->vertexBufferSphere.push_back(red);
+				else
+					this->vertexBufferSphere.push_back(0.0f);
+					
+				GLfloat green = cos( (2.0f / 3.0f)* M_PI + (GLfloat)alphaIndex * 2 * M_PI / (12.0f )); 
+				if (green > 0.0f)
+					this->vertexBufferSphere.push_back(green);
+				else
+					this->vertexBufferSphere.push_back(0.0f);
+
+				GLfloat blue = cos( (4.0f / 3.0f)* M_PI + (GLfloat)alphaIndex * 2 * M_PI / (12.0f )); 
+				if (green > 0.0f)
+					this->vertexBufferSphere.push_back(blue);
+				else
+					this->vertexBufferSphere.push_back(0.0f);
+
 				this->vertexBufferSphere.push_back(1.0f);
 
 
