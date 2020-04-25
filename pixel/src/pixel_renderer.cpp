@@ -233,12 +233,6 @@ void PixelRenderer::generateVertexBufferSphere()
 	
 }
 
-void PixelRenderer::generateVertexBuffers()
-{
-	generateVertexBufferMatrix();
-	generateVertexBufferSphere();
-}
-
 void PixelRenderer::setSphereVisible()
 {
 	this->sphereVisible = 1;

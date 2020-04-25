@@ -28,20 +28,10 @@ public:
 	const std::unique_ptr<PixelPalette>& pixelPalette;
 
 private:
-	void generateVertexBufferMatrix();
-	void generateVertexBufferSphere();
-	void generateVertexBuffers();
-	inline void addPixel(const GLuint& x, const GLuint& y);
-	inline void addZandColor(const GLuint& x, const GLuint& y, const GLuint& shift);
 	inline void changePixelColor(const GLuint& x, const GLuint& y, const GLuint& color);
 	inline void changePixelShadow(const GLuint& x, const GLuint& y, const GLuint& shadowColor);
-	inline GLfloat getRed(const GLuint& color);
-	inline GLfloat getGreen(const GLuint& color);
-	inline GLfloat getBlue(const GLuint& color);
 	GLuint xSize = 64;
 	GLuint ySize = 36;
-	GLfloat dx = 0.0f;
-	GLfloat dy = 0.0f;
 	
 	std::vector<GLuint> colorBuffer;
 	std::vector<GLfloat> vertexBufferMatrix;
@@ -51,11 +41,22 @@ private:
 	GLuint sphereVisible = 1;
 	
 
-	GLfloat borderPercent=0.05;
 	GLuint backgroundColor = 0x0;
 	GLuint cursorColor = 0x333333;
 	GLuint shadowColor = 0x000000;
+
+	// to pixel_mesh 
 	GLfloat mag = 2.8;
+	GLfloat borderPercent=0.05;
+	GLfloat dx = 0.0f;
+	GLfloat dy = 0.0f;
+	void generateVertexBufferMatrix();
+	void generateVertexBufferSphere();
+	inline void addPixel(const GLuint& x, const GLuint& y);
+	inline void addZandColor(const GLuint& x, const GLuint& y, const GLuint& shift);
+	inline GLfloat getRed(const GLuint& color);
+	inline GLfloat getGreen(const GLuint& color);
+	inline GLfloat getBlue(const GLuint& color);
 
 
 };
