@@ -1,13 +1,14 @@
 #pragma once
 #include "src/pixel_common_headers.h"
+#include "src/pixel_palette.h"
 #include "src/pixel_gl_program_manager.h"
 #include "src/pixel_surface.h"
 #include "src/pixel_animation.h"
 
 class PixelRenderer {
 public:
-	PixelRenderer();
-	void render(const std::unique_ptr<PixelGLProgramManager>& pixelGLProgramManager, const std::unique_ptr<PixelSurface>& pixelSurface);
+	PixelRenderer(std::unique_ptr<PixelGLProgramManager>& pixelGLProgramManager, std::unique_ptr<PixelSurface>& pixelSurface, std::unique_ptr<PixelPalette>& pixelPalette);
+	void render();
 	void drawPixel(const GLuint& x, const GLuint& y, const GLuint& color);
 	void clearPixel(const GLuint& x, const GLuint& y);
 	void focusPixel(const GLuint& x, const GLuint& y);
@@ -21,7 +22,10 @@ public:
 	void setSphereInvisible();
 	void changeSphereVisibility();
 	
-	std::unique_ptr<PixelAnimation> pixelAnimation = nullptr;
+	std::unique_ptr<PixelAnimation> pixelAnimation;
+	const std::unique_ptr<PixelGLProgramManager>& pixelGLProgramManager;
+	const std::unique_ptr<PixelSurface>& pixelSurface;
+	const std::unique_ptr<PixelPalette>& pixelPalette;
 
 private:
 	void generateVertexBufferMatrix();

@@ -98,7 +98,7 @@ void PixelController::eventLoop()
 	for (;!shouldStop;)
 	{
 		gettimeofday(&startRenderTime, NULL);
-		pixelRenderer->render(pixelGLProgramManager, pixelSurface);
+		pixelRenderer->render();
 		gettimeofday(&endRenderTime, NULL);
 		while (XPending(pixelSurface->xDisplay))
 		{

@@ -1,6 +1,9 @@
 #include "pixel_renderer.h"
 
-PixelRenderer::PixelRenderer()
+PixelRenderer::PixelRenderer(std::unique_ptr<PixelGLProgramManager>& pixelGLProgramManager, std::unique_ptr<PixelSurface>& pixelSurface, std::unique_ptr<PixelPalette>& pixelPalette) :
+	pixelGLProgramManager(pixelGLProgramManager),
+	pixelSurface(pixelSurface),
+	pixelPalette(pixelPalette)
 {
 }
 
@@ -187,25 +190,15 @@ void PixelRenderer::generateVertexBufferSphere()
 					this->vertexBufferSphere.push_back(-1.0f * z);
 				else
 					this->vertexBufferSphere.push_back(z);
-			
-				GLfloat red = cos((GLfloat)alphaIndex * 2 * M_PI / (12.0f )); 
-				if (red > 0.0f)
-					this->vertexBufferSphere.push_back(red);
-				else
-					this->vertexBufferSphere.push_back(0.0f);
+		
+
+				this->vertexBufferSphere.push_back(
+					pixelPalette->getRed(alphaIndex, zetaIndex + invert * 4));
+				this->vertexBufferSphere.push_back(
+					pixelPalette->getGreen(alphaIndex, zetaIndex + invert * 4));
+				this->vertexBufferSphere.push_back(
+					pixelPalette->getBlue(alphaIndex, zetaIndex + invert * 4));
 					
-				GLfloat green = cos( (2.0f / 3.0f)* M_PI + (GLfloat)alphaIndex * 2 * M_PI / (12.0f )); 
-				if (green > 0.0f)
-					this->vertexBufferSphere.push_back(green);
-				else
-					this->vertexBufferSphere.push_back(0.0f);
-
-				GLfloat blue = cos( (4.0f / 3.0f)* M_PI + (GLfloat)alphaIndex * 2 * M_PI / (12.0f )); 
-				if (green > 0.0f)
-					this->vertexBufferSphere.push_back(blue);
-				else
-					this->vertexBufferSphere.push_back(0.0f);
-
 				this->vertexBufferSphere.push_back(1.0f);
 
 
@@ -262,7 +255,7 @@ void PixelRenderer::changeSphereVisibility()
 }
 
 
-void PixelRenderer::render(const std::unique_ptr<PixelGLProgramManager>& pixelGLProgramManager, const std::unique_ptr<PixelSurface>& pixelSurface) 
+void PixelRenderer::render() 
 {
 	glViewport ( 0 , 0 , pixelSurface->windowWidth , pixelSurface->windowHeight );
 	glClearColor ( 0.1f , 0.1f , 0.1f , 0.1f);    // background color

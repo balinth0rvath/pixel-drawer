@@ -1,4 +1,5 @@
 #include "src/pixel_common_headers.h"
+#include "src/pixel_palette.h"
 #include "src/pixel_surface.h"
 #include "src/pixel_gl_program_manager.h"
 #include "src/pixel_renderer.h"
@@ -8,8 +9,11 @@ int  main()
 {
 	auto pixelGLProgramManager = std::make_unique<PixelGLProgramManager>();
 	auto pixelSurface = std::make_unique<PixelSurface>();
-
-	auto pixelRenderer = std::make_unique<PixelRenderer>();
+	auto pixelPalette = std::make_unique<PixelPalette>();
+	auto pixelRenderer = std::make_unique<PixelRenderer>(
+								pixelGLProgramManager, 
+								pixelSurface, 		
+								pixelPalette);
 	auto pixelController = std::make_unique<PixelController>(
 								pixelRenderer, 
 								pixelSurface,
