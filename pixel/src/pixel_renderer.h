@@ -15,7 +15,7 @@ public:
 	void focusPixel(const GLuint& x, const GLuint& y);
 	void unfocusPixel(const GLuint& x, const GLuint& y);
 
-	void generateCanvas(const GLuint& xSize, const GLuint& ySize, const GLuint& backgroundColor);
+	void generateCanvas();
 	void generateSphere(const std::unique_ptr<PixelSurface>& pixelSurface);
 	inline GLuint getXSize() { return this->xSize; };
 	inline GLuint getYSize() { return this->ySize; };
@@ -32,33 +32,19 @@ private:
 	std::unique_ptr<PixelMesh> pixelMesh;
 	inline void changePixelColor(const GLuint& x, const GLuint& y, const GLuint& color);
 	inline void changePixelShadow(const GLuint& x, const GLuint& y, const GLuint& shadowColor);
-	GLuint xSize = 64;
-	GLuint ySize = 36;
+	GLuint xSize = 32;
+	GLuint ySize = 32;
 	
-	std::vector<GLuint> colorBuffer;
-	std::vector<GLfloat> vertexBufferMatrix;
+	std::unique_ptr<std::vector<GLuint>> colorBuffer;
+	std::unique_ptr<std::vector<GLfloat>> vertexBufferMatrix;
 	std::unique_ptr<std::vector<GLfloat>> vertexBufferSphere;
 	std::unique_ptr<std::vector<GLubyte>> indexBufferSphere;
-	const GLfloat sphereSize = 1.0f;	
+
 	GLuint sphereVisible = 1;
 	
-
-	GLuint backgroundColor = 0x0;
+	GLuint backgroundColor = 0x202020;
 	GLuint cursorColor = 0x333333;
 	GLuint shadowColor = 0x000000;
-
-	// to pixel_mesh 
-	GLfloat mag = 2.8;
-	GLfloat borderPercent=0.05;
-	GLfloat dx = 0.0f;
-	GLfloat dy = 0.0f;
-	void generateVertexBufferMatrix();
-	inline void addPixel(const GLuint& x, const GLuint& y);
-	inline void addZandColor(const GLuint& x, const GLuint& y, const GLuint& shift);
-	inline GLfloat getRed(const GLuint& color);
-	inline GLfloat getGreen(const GLuint& color);
-	inline GLfloat getBlue(const GLuint& color);
-
 
 };
 

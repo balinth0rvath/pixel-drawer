@@ -29,7 +29,7 @@ PixelPalette::PixelPalette()
 	this->palette = std::make_unique<std::vector<std::vector<GLuint>>>(paletteLocal);
 }
 
-inline GLubyte PixelPalette::convertZeta(const GLubyte& zeta)
+GLubyte PixelPalette::convertZeta(const GLubyte& zeta)
 {
 	return (zeta < 4) ? 4 - zeta : zeta;
 }
@@ -38,6 +38,7 @@ GLfloat PixelPalette::getRed(const GLubyte& alpha, const GLubyte& zeta)
 {
 	return ((GLfloat)((*this->palette)[alpha][convertZeta(zeta)] >> 16)/ 255.0f);
 }
+
 GLfloat PixelPalette::getGreen(const GLubyte& alpha, const GLubyte& zeta) 
 {
 	return ((GLfloat)(( 0x00ffff & (*this->palette)[alpha][convertZeta(zeta)]) >> 8)/ 255.0f);
@@ -46,4 +47,24 @@ GLfloat PixelPalette::getGreen(const GLubyte& alpha, const GLubyte& zeta)
 GLfloat PixelPalette::getBlue(const GLubyte& alpha, const GLubyte& zeta)
 {
 	return ((GLfloat)(( 0x0000ff & (*this->palette)[alpha][convertZeta(zeta)]))/ 255.0f);
+}
+
+GLfloat PixelPalette::getRed(const GLuint& color)
+{
+	GLuint tmp = color >> 16;
+	uint8_t red = (uint8_t) tmp;
+	return (GLfloat)red / 0xff;
+}
+
+GLfloat PixelPalette::getGreen(const GLuint& color)
+{
+	GLuint tmp = (color >> 8) & 0xff;
+	uint8_t green = (uint8_t) tmp;
+	return (GLfloat)green / 0xff;
+}
+
+GLfloat PixelPalette::getBlue(const GLuint& color)
+{
+	uint8_t blue = (uint8_t) (color & 0xff);
+	return (GLfloat)blue / 0xff;
 }

@@ -1,9 +1,12 @@
 #include "pixel_mesh.h"
 
-PixelMesh::PixelMesh(const std::unique_ptr<PixelPalette>& pixelPalette)
+PixelMesh::PixelMesh(	const std::unique_ptr<PixelPalette>& pixelPalette, 
+						const GLuint& xSize, 
+						const GLuint& ySize)
 	: pixelPalette(pixelPalette)
 {
-
+	this->dx =  2.0f / xSize;
+	this->dy =  2.0f / ySize;
 }
 
 
@@ -69,3 +72,80 @@ void PixelMesh::generateIndexBufferSphere(const std::unique_ptr<std::vector<GLub
 
 		}
 }
+
+void PixelMesh::generateVertexBufferMatrix(	
+								const std::unique_ptr<std::vector<GLfloat>>& vertexBufferMatrix,
+								const std::unique_ptr<std::vector<GLuint>>& colorBuffer, 
+								const GLuint& xSize, 		
+								const GLuint& ySize)
+{
+	for(GLuint y=0; y < ySize; y++)
+	{
+		for (GLuint x=0; x < xSize; x++)
+		{
+			addVertex(vertexBufferMatrix, colorBuffer, x,y,xSize,ySize);
+		}
+	}
+}
+
+void PixelMesh::addVertex(	const std::unique_ptr<std::vector<GLfloat>>& vertexBufferMatrix,
+							const std::unique_ptr<std::vector<GLuint>>& colorBuffer,	
+							const GLuint& x, 
+							const GLuint& y,
+							const GLuint& xSize,
+							const GLuint& ySize)
+{
+	// 3.   x     x 2. 5.        
+	//           . 
+	//          . 
+	//         .
+	//        .  
+	//       .    
+	// 0. 4.x     x 1.
+
+	// 0
+	vertexBufferMatrix->push_back(mag * dx * (x + borderPercent) - mag);
+	vertexBufferMatrix->push_back(mag * dy * (y + borderPercent) - mag);
+
+	addZandColor(vertexBufferMatrix,x,y,0);
+	// 1
+	vertexBufferMatrix->push_back(mag * dx * (x + 1 - borderPercent) - mag);
+	vertexBufferMatrix->push_back(mag * dy * (y + borderPercent) - mag);
+
+	addZandColor(vertexBufferMatrix,x,y,0);
+	// 2	
+	vertexBufferMatrix->push_back(mag * dx * (x + 1 - borderPercent) - mag);
+	vertexBufferMatrix->push_back(mag * dy * (y + 1 - borderPercent)  - mag);
+	
+	addZandColor(vertexBufferMatrix,x,y,(*colorBuffer)[ x + y * xSize]);	
+	// 3
+	vertexBufferMatrix->push_back(mag * dx * (x + borderPercent) - mag);
+	vertexBufferMatrix->push_back(mag * dy * (y + 1 - borderPercent) - mag);
+
+	addZandColor(vertexBufferMatrix,x,y,(*colorBuffer)[ x + y * xSize]);
+	// 4
+	vertexBufferMatrix->push_back(mag * dx * (x + borderPercent) - mag);
+	vertexBufferMatrix->push_back(mag * dy * (y + borderPercent) - mag);
+
+	addZandColor(vertexBufferMatrix,x,y,0);
+	// 5
+	vertexBufferMatrix->push_back(mag * dx * (x + 1 - borderPercent) - mag);
+	vertexBufferMatrix->push_back(mag * dy * (y + 1 - borderPercent)  - mag);
+	
+	addZandColor(vertexBufferMatrix,x,y,(*colorBuffer)[ x + y * xSize]);	
+
+}
+
+inline void PixelMesh::addZandColor(const std::unique_ptr<std::vector<GLfloat>>& vertexBufferMatrix,
+									const GLuint& x, 		
+									const GLuint& y, 
+									const GLuint& color)
+{
+	vertexBufferMatrix->push_back(-5.0f);
+	vertexBufferMatrix->push_back(PixelPalette::getRed(color));
+	vertexBufferMatrix->push_back(PixelPalette::getGreen(color));
+	vertexBufferMatrix->push_back(PixelPalette::getBlue(color));
+	vertexBufferMatrix->push_back(1.0f);	
+}
+
+
