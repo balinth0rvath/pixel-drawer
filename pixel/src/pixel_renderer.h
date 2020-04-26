@@ -4,6 +4,7 @@
 #include "src/pixel_gl_program_manager.h"
 #include "src/pixel_surface.h"
 #include "src/pixel_animation.h"
+#include "src/pixel_mesh.h"
 
 class PixelRenderer {
 public:
@@ -28,6 +29,7 @@ public:
 	const std::unique_ptr<PixelPalette>& pixelPalette;
 
 private:
+	std::unique_ptr<PixelMesh> pixelMesh;
 	inline void changePixelColor(const GLuint& x, const GLuint& y, const GLuint& color);
 	inline void changePixelShadow(const GLuint& x, const GLuint& y, const GLuint& shadowColor);
 	GLuint xSize = 64;
@@ -35,8 +37,8 @@ private:
 	
 	std::vector<GLuint> colorBuffer;
 	std::vector<GLfloat> vertexBufferMatrix;
-	std::vector<GLfloat> vertexBufferSphere;
-	std::vector<GLubyte> indexBufferSphere;
+	std::unique_ptr<std::vector<GLfloat>> vertexBufferSphere;
+	std::unique_ptr<std::vector<GLubyte>> indexBufferSphere;
 	const GLfloat sphereSize = 1.0f;	
 	GLuint sphereVisible = 1;
 	
@@ -51,7 +53,6 @@ private:
 	GLfloat dx = 0.0f;
 	GLfloat dy = 0.0f;
 	void generateVertexBufferMatrix();
-	void generateVertexBufferSphere();
 	inline void addPixel(const GLuint& x, const GLuint& y);
 	inline void addZandColor(const GLuint& x, const GLuint& y, const GLuint& shift);
 	inline GLfloat getRed(const GLuint& color);

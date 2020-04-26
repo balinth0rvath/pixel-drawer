@@ -5,13 +5,18 @@ PixelRenderer::PixelRenderer(std::unique_ptr<PixelGLProgramManager>& pixelGLProg
 	pixelSurface(pixelSurface),
 	pixelPalette(pixelPalette)
 {
+	this->pixelMesh = std::make_unique<PixelMesh>(this->pixelPalette);	
 }
 
 
 void PixelRenderer::generateSphere(const std::unique_ptr<PixelSurface>& pixelSurface)
 {
 	this->pixelAnimation = std::make_unique<PixelAnimation>(pixelSurface);
-	generateVertexBufferSphere();
+	this->vertexBufferSphere = std::make_unique<std::vector<GLfloat>>(0);
+	this->indexBufferSphere = std::make_unique<std::vector<GLubyte>>(0);
+	this->pixelMesh->generateVertexBufferSphere(vertexBufferSphere);
+	this->pixelMesh->generateIndexBufferSphere(indexBufferSphere);
+	
 }
 
 void PixelRenderer::generateCanvas(const GLuint & xSize, const GLuint& ySize, const GLuint& backgroundColor) 
@@ -168,71 +173,6 @@ void PixelRenderer::generateVertexBufferMatrix()
 	}
 }
 
-void PixelRenderer::generateVertexBufferSphere()
-{
-	this->vertexBufferSphere = std::vector<GLfloat>(0);
-	this->indexBufferSphere = std::vector<GLubyte>(0);
-
-	for(GLuint invert = 0; invert < 2; ++invert)
-		for(GLuint zetaIndex = 0; zetaIndex<4; ++zetaIndex)
-			for(GLuint alphaIndex =0; alphaIndex<12; ++alphaIndex)
-			{
-				GLfloat x = sphereSize * cos((GLfloat)alphaIndex * 2 * M_PI / 12.0f) * 
-										 cos((GLfloat)zetaIndex * M_PI / 6.0f);
-				this->vertexBufferSphere.push_back(x);
-
-				GLfloat y = sphereSize * sin((GLfloat)alphaIndex * 2 * M_PI / 12.0f) *
-										 cos((GLfloat)zetaIndex * M_PI / 6.0f);
-				this->vertexBufferSphere.push_back(y);
-
-				GLfloat z = sphereSize * sin((GLfloat)zetaIndex * M_PI / 6.0f);
-				if (invert)
-					this->vertexBufferSphere.push_back(-1.0f * z);
-				else
-					this->vertexBufferSphere.push_back(z);
-		
-
-				this->vertexBufferSphere.push_back(
-					pixelPalette->getRed(alphaIndex, zetaIndex + invert * 4));
-				this->vertexBufferSphere.push_back(
-					pixelPalette->getGreen(alphaIndex, zetaIndex + invert * 4));
-				this->vertexBufferSphere.push_back(
-					pixelPalette->getBlue(alphaIndex, zetaIndex + invert * 4));
-					
-				this->vertexBufferSphere.push_back(1.0f);
-
-
-			}
-
-	for (GLuint invert = 0; invert < 2; ++invert)
-		for (GLuint zetaIndex = 0; zetaIndex<3; ++zetaIndex)
-			for (GLuint alphaIndex = 0; alphaIndex<12; ++alphaIndex)
-			{
-				GLuint invertOffset = invert * 48;
-				GLuint overflowAlphaIndex = (alphaIndex==11) ? 0 : alphaIndex + 1;			
-
-				this->indexBufferSphere.push_back(invertOffset +
-						12 * zetaIndex + alphaIndex);
-
-				this->indexBufferSphere.push_back(invertOffset +
-						12 * zetaIndex + overflowAlphaIndex);
-
-				this->indexBufferSphere.push_back(invertOffset +
-						12 * (zetaIndex + 1 ) + alphaIndex);
-
-				this->indexBufferSphere.push_back(invertOffset +
-						12 * zetaIndex + overflowAlphaIndex);
-
-				this->indexBufferSphere.push_back(invertOffset +
-						12 * (zetaIndex + 1 ) + alphaIndex );
-
-				this->indexBufferSphere.push_back(invertOffset +
-						12 * (zetaIndex + 1 ) + overflowAlphaIndex );
-
-		}
-	
-}
-
 void PixelRenderer::setSphereVisible()
 {
 	this->sphereVisible = 1;
@@ -273,8 +213,8 @@ void PixelRenderer::render()
 
 	if (sphereVisible)
 	{
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 28, &vertexBufferSphere[0]);
-		glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 28, &vertexBufferSphere[0]+3);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 28, &((*this->vertexBufferSphere)[0]));
+		glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 28, &((*this->vertexBufferSphere)[0])+3);
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
 		glm::mat4 sphereModel(1.0f);
@@ -284,7 +224,7 @@ void PixelRenderer::render()
 		pixelAnimation->rotateSphere();
 		glUniformMatrix4fv(pixelGLProgramManager->getUniformModel(), 1, GL_FALSE, glm::value_ptr(sphereModel));
 		glUniformMatrix4fv(pixelGLProgramManager->getUniformProjection(), 1, GL_FALSE, glm::value_ptr(pixelAnimation->getSphereProjection()));
-		glDrawElements(GL_TRIANGLES, 6 *  72, GL_UNSIGNED_BYTE, &indexBufferSphere[0]);
+		glDrawElements(GL_TRIANGLES, 6 *  72, GL_UNSIGNED_BYTE, &((*this->indexBufferSphere)[0]));
 
 	} 
 
