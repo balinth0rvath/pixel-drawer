@@ -41,35 +41,62 @@ void PixelController::processKeyCode(const int& keycode, int& shouldStop)
 			}
 			break;
 		case X11_KEY_UP:
-			if (this->pixelRenderer->getYSize()-1 > cursorY) 
-			{ 
-				pixelRenderer->unfocusPixel(cursorX,cursorY);
-				cursorY+= 1; 
-				pixelRenderer->focusPixel(cursorX,cursorY);
+			if (pixelRenderer->pixelAnimation->getSphereAnimationState() == PixelAnimationState::stoppedAway)
+			{
+				if (this->pixelRenderer->getYSize()-1 > cursorY) 
+				{ 
+					pixelRenderer->unfocusPixel(cursorX,cursorY);
+					cursorY+= 1; 
+					pixelRenderer->focusPixel(cursorX,cursorY);
+
+				} 
+			} else
+			{
+				pixelRenderer->incAlpha(dRotation);
 			}
+
 			break;
 		case X11_KEY_DOWN:
-			if (cursorY != 0)
+			if (pixelRenderer->pixelAnimation->getSphereAnimationState() == PixelAnimationState::stoppedAway)
 			{
-				pixelRenderer->unfocusPixel(cursorX,cursorY);
-				cursorY-= 1;
-				pixelRenderer->focusPixel(cursorX,cursorY);
+				if (cursorY != 0)
+				{
+					pixelRenderer->unfocusPixel(cursorX,cursorY);
+					cursorY-= 1;
+						pixelRenderer->focusPixel(cursorX,cursorY);
+
+				}
+			} else
+			{
+				pixelRenderer->decAlpha(dRotation);
 			}
 			break;
 		case X11_KEY_LEFT:
-			if (cursorX != 0)
+			if (pixelRenderer->pixelAnimation->getSphereAnimationState() == PixelAnimationState::stoppedAway)
 			{
-				pixelRenderer->unfocusPixel(cursorX,cursorY);
-				cursorX-= 1;
-				pixelRenderer->focusPixel(cursorX,cursorY);
+				if (cursorX != 0)
+				{
+					pixelRenderer->unfocusPixel(cursorX,cursorY);
+					cursorX-= 1;
+					pixelRenderer->focusPixel(cursorX,cursorY);
+				}
+			} else
+			{
+				pixelRenderer->decZeta(dRotation);
 			}
 			break;
 		case X11_KEY_RIGHT:
-			if (this->pixelRenderer->getXSize()-1 > cursorX)
+			if (pixelRenderer->pixelAnimation->getSphereAnimationState() == PixelAnimationState::stoppedAway)
 			{
-				pixelRenderer->unfocusPixel(cursorX,cursorY);
-				cursorX+= 1;
-				pixelRenderer->focusPixel(cursorX,cursorY);
+				if (this->pixelRenderer->getXSize()-1 > cursorX)
+				{
+					pixelRenderer->unfocusPixel(cursorX,cursorY);
+					cursorX+= 1;
+					pixelRenderer->focusPixel(cursorX,cursorY);
+				}
+			} else
+			{
+				pixelRenderer->incZeta(dRotation);
 			}
 			break;
 		case X11_KEY_1:
@@ -95,6 +122,7 @@ void PixelController::eventLoop()
 	uint32_t sumRenderTime=0;
 		
 	pixelRenderer->focusPixel(cursorX,cursorY);
+	
 	for (;!shouldStop;)
 	{
 		gettimeofday(&startRenderTime, NULL);

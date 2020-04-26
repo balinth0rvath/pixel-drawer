@@ -12,13 +12,10 @@ public:
 	PixelAnimationState getSphereAnimationState() const { return this->pixelAnimationState; };
 	void animateSphere();
 	glm::vec3 getSpherePosition() const { return this->spherePosition; };
-	GLfloat getSphereRotation() const { return this->sphereRotation; };
 	glm::mat4 getSphereProjection() const { return this->sphereProjection; };
-	void rotateSphere();
 
 private:
 	glm::vec3 spherePosition;
-	GLfloat sphereRotation = 0;
 	glm::mat4 sphereProjection;
 	PixelAnimationState pixelAnimationState;
 	const GLfloat animationSpeed = 0.4f;

@@ -125,22 +125,22 @@ void PixelRenderer::render()
 
 	glDrawArrays(GL_TRIANGLES, 0, 6 * this->xSize * this->ySize);
 
-	if (sphereVisible)
-	{
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 28, &((*this->vertexBufferSphere)[0]));
-		glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 28, &((*this->vertexBufferSphere)[0])+3);
-		glEnableVertexAttribArray(0);
-		glEnableVertexAttribArray(1);
-		glm::mat4 sphereModel(1.0f);
-		pixelAnimation->animateSphere();
-		sphereModel = glm::translate(sphereModel, pixelAnimation->getSpherePosition());
-		sphereModel = glm::rotate(sphereModel, pixelAnimation->getSphereRotation(), glm::vec3(1.0f,1.0f,0.0f));
-		pixelAnimation->rotateSphere();
-		glUniformMatrix4fv(pixelGLProgramManager->getUniformModel(), 1, GL_FALSE, glm::value_ptr(sphereModel));
-		glUniformMatrix4fv(pixelGLProgramManager->getUniformProjection(), 1, GL_FALSE, glm::value_ptr(pixelAnimation->getSphereProjection()));
-		glDrawElements(GL_TRIANGLES, 6 *  72, GL_UNSIGNED_BYTE, &((*this->indexBufferSphere)[0]));
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 28, &((*this->vertexBufferSphere)[0]));
+	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 28, &((*this->vertexBufferSphere)[0])+3);
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+	glm::mat4 sphereModel(1.0f);
+	pixelAnimation->animateSphere();
+	sphereModel = glm::translate(sphereModel, pixelAnimation->getSpherePosition());
+	//sphereModel = glm::rotate(sphereModel, pixelAnimation->getSphereRotation(), glm::vec3(1.0f,1.0f,0.0f));
+	//pixelAnimation->rotateSphere();
 
-	} 
+	sphereModel = glm::rotate(sphereModel, sphereAngleAlpha,  glm::vec3(1.0f,0.0f,0.0f));
+	sphereModel = glm::rotate(sphereModel, sphereAngleZeta, glm::vec3(0.0f,0.0f,1.0f));
+	glUniformMatrix4fv(pixelGLProgramManager->getUniformModel(), 1, GL_FALSE, glm::value_ptr(sphereModel));
+	glUniformMatrix4fv(pixelGLProgramManager->getUniformProjection(), 1, GL_FALSE, glm::value_ptr(pixelAnimation->getSphereProjection()));
+	glDrawElements(GL_TRIANGLES, 6 *  72, GL_UNSIGNED_BYTE, &((*this->indexBufferSphere)[0]));
+
 
 	eglSwapBuffers ( pixelSurface->getEGLDisplay(), pixelSurface->getEGLSurface() );  // get the rendered vertexBufferMatrix to the screen
 	return;

@@ -2,7 +2,7 @@
 
 PixelAnimation::PixelAnimation(const std::unique_ptr<PixelSurface>& pixelSurface)
 {
-	this->spherePosition = { 0.0f, 0.0f, -5.0f};
+	this->spherePosition = { 0.0f, 0.0f, -14.0f};
 	this->sphereProjection = glm::perspective(45.0f, (GLfloat)pixelSurface->windowWidth/(GLfloat)pixelSurface->windowHeight, 0.1f, 100.0f);
 	this->pixelAnimationState = PixelAnimationState::stoppedAway; 
 
@@ -49,11 +49,5 @@ void PixelAnimation::animateSphere()
 		default:
 		break;
 	}
-}
-
-
-void PixelAnimation::rotateSphere()
-{
-	this->sphereRotation+=0.01f;
 }
 
