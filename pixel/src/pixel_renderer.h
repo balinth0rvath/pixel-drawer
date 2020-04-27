@@ -27,11 +27,12 @@ public:
 	const std::unique_ptr<PixelGLProgramManager>& pixelGLProgramManager;
 	const std::unique_ptr<PixelSurface>& pixelSurface;
 	const std::unique_ptr<PixelPalette>& pixelPalette;
-	void incAlpha(const GLfloat& dRotation) { sphereAngleAlpha += dRotation;};
-	void decAlpha(const GLfloat& dRotation) { sphereAngleAlpha -= dRotation;};
-	void incZeta(const GLfloat& dRotation) { sphereAngleZeta += dRotation;};
-	void decZeta(const GLfloat& dRotation) { sphereAngleZeta -= dRotation;};
+	void incAlpha(const GLfloat& dRotation);
+	void decAlpha(const GLfloat& dRotation);
+	void incZeta(const GLfloat& dRotation);
+	void decZeta(const GLfloat& dRotation);
 private:
+	void show() { std::cout << "alpha: " << sphereAngleAlpha << " zeta: " << sphereAngleZeta << std::endl; }; 
 	std::unique_ptr<PixelMesh> pixelMesh;
 	inline void changePixelColor(const GLuint& x, const GLuint& y, const GLuint& color);
 	inline void changePixelShadow(const GLuint& x, const GLuint& y, const GLuint& shadowColor);
@@ -44,9 +45,11 @@ private:
 	std::unique_ptr<std::vector<GLubyte>> indexBufferSphere;
 
 	GLuint sphereVisible = 1;	
-	GLfloat sphereAngleAlpha = 0.0f;
-	GLfloat sphereAngleZeta = 0.0f;
+	GLint sphereAngleAlpha = 90;
+	GLint sphereAngleZeta = 0;
 		
+	inline GLfloat getSphereAngleAlpha() { return (2.0f * M_PI * (GLfloat)sphereAngleAlpha / 360.0f); };
+	inline GLfloat getSphereAngleZeta() { return (2.0f * M_PI * (GLfloat)sphereAngleZeta / 360.0f); };
 	GLuint backgroundColor = 0x202020;
 	GLuint cursorColor = 0x333333;
 	GLuint shadowColor = 0x000000;

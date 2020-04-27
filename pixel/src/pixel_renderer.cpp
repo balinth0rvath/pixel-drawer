@@ -132,11 +132,9 @@ void PixelRenderer::render()
 	glm::mat4 sphereModel(1.0f);
 	pixelAnimation->animateSphere();
 	sphereModel = glm::translate(sphereModel, pixelAnimation->getSpherePosition());
-	//sphereModel = glm::rotate(sphereModel, pixelAnimation->getSphereRotation(), glm::vec3(1.0f,1.0f,0.0f));
-	//pixelAnimation->rotateSphere();
 
-	sphereModel = glm::rotate(sphereModel, sphereAngleAlpha,  glm::vec3(1.0f,0.0f,0.0f));
-	sphereModel = glm::rotate(sphereModel, sphereAngleZeta, glm::vec3(0.0f,0.0f,1.0f));
+	sphereModel = glm::rotate(sphereModel, getSphereAngleAlpha(),  glm::vec3(1.0f,0.0f,0.0f));
+	sphereModel = glm::rotate(sphereModel, getSphereAngleZeta(), glm::vec3(0.0f,0.0f,1.0f));
 	glUniformMatrix4fv(pixelGLProgramManager->getUniformModel(), 1, GL_FALSE, glm::value_ptr(sphereModel));
 	glUniformMatrix4fv(pixelGLProgramManager->getUniformProjection(), 1, GL_FALSE, glm::value_ptr(pixelAnimation->getSphereProjection()));
 	glDrawElements(GL_TRIANGLES, 6 *  72, GL_UNSIGNED_BYTE, &((*this->indexBufferSphere)[0]));
@@ -145,3 +143,43 @@ void PixelRenderer::render()
 	eglSwapBuffers ( pixelSurface->getEGLDisplay(), pixelSurface->getEGLSurface() );  // get the rendered vertexBufferMatrix to the screen
 	return;
 }
+
+void PixelRenderer::incAlpha(const GLfloat& dRotation) 
+{ 
+	sphereAngleAlpha += dRotation; 
+	if (sphereAngleAlpha > 180)
+	{
+		sphereAngleAlpha = 180;	
+	}
+	show(); 
+};
+
+void PixelRenderer::decAlpha(const GLfloat& dRotation) 
+{ 
+	sphereAngleAlpha -= dRotation; 
+	if (sphereAngleAlpha < 0)
+	{
+		sphereAngleAlpha = 0; 
+	} 
+	show(); 
+};
+
+void PixelRenderer::incZeta(const GLfloat& dRotation) 
+{ 
+	sphereAngleZeta += dRotation; 
+	if (sphereAngleZeta == 360)
+	{
+		sphereAngleZeta = 0;	
+	}
+	show(); 
+};
+
+void PixelRenderer::decZeta(const GLfloat& dRotation) 
+{ 
+	sphereAngleZeta -= dRotation; 
+	if (sphereAngleZeta < 0)
+	{
+		sphereAngleZeta = 330; 
+	} 
+	show(); 
+};

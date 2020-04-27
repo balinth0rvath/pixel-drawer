@@ -31,7 +31,7 @@ private:
 	GLuint cursorX=0;
 	GLuint cursorY=0;
 	GLuint currentColor=0x0;
-	GLfloat dRotation = 0.03f;
+	GLuint dRotation = 30;
 };
 
 

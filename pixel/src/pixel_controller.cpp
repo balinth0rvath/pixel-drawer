@@ -132,12 +132,10 @@ void PixelController::eventLoop()
 		{
 			XEvent e;
 			XNextEvent(pixelSurface->xDisplay, &e);
-			std::cout << "event" << std::endl;
 			switch (e.type)
 			{
 				case 2:
 		
-					std::cout << "xkey event: " << e.xkey.keycode << std::endl;
 					processKeyCode(e.xkey.keycode, shouldStop);
 
 				break;
