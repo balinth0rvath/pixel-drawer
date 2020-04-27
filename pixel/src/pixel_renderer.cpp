@@ -183,3 +183,16 @@ void PixelRenderer::decZeta(const GLfloat& dRotation)
 	} 
 	show(); 
 };
+
+GLuint PixelRenderer::getMainColorIndex() const
+{
+	GLuint z = sphereAngleZeta / 30;
+	GLuint idx = (z<4) ? 3 - z : 15 - z;
+	return idx;
+}
+	
+GLuint PixelRenderer::getSubColorIndex() const
+{
+	GLuint a = sphereAngleAlpha / 30;
+	return a + 1;
+}

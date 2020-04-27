@@ -2,10 +2,12 @@
 
 PixelController::PixelController(std::unique_ptr<PixelRenderer>& pixelRenderer,
 								std::unique_ptr<PixelSurface>& pixelSurface,
-								std::unique_ptr<PixelGLProgramManager>& pixelGLProgramManager) :
+								std::unique_ptr<PixelGLProgramManager>& pixelGLProgramManager,
+								std::unique_ptr<PixelPalette>& pixelPalette) :
 								pixelRenderer(pixelRenderer),
 								pixelSurface(pixelSurface),
-								pixelGLProgramManager(pixelGLProgramManager)
+								pixelGLProgramManager(pixelGLProgramManager),
+								pixelPalette(pixelPalette)
 						
 {
 
@@ -33,6 +35,12 @@ void PixelController::processKeyCode(const int& keycode, int& shouldStop)
 		case X11_SPACE:
 			if (pixelRenderer->pixelAnimation->getSphereAnimationState() == PixelAnimationState::stoppedFront)
 			{
+				GLuint zeta = pixelRenderer->getMainColorIndex();
+				GLuint alpha = pixelRenderer->getSubColorIndex();
+	
+				std::cout << "Palette index: " << zeta << std::endl;
+				this->currentColor = pixelPalette->getColor(zeta, alpha);
+
 				pixelRenderer->pixelAnimation->pushSphereBack();
 			}	 	
 			if (pixelRenderer->pixelAnimation->getSphereAnimationState() == PixelAnimationState::stoppedAway)

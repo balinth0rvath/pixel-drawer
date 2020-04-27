@@ -31,6 +31,8 @@ public:
 	void decAlpha(const GLfloat& dRotation);
 	void incZeta(const GLfloat& dRotation);
 	void decZeta(const GLfloat& dRotation);
+	GLuint getMainColorIndex() const;
+	GLuint getSubColorIndex() const;
 private:
 	void show() { std::cout << "alpha: " << sphereAngleAlpha << " zeta: " << sphereAngleZeta << std::endl; }; 
 	std::unique_ptr<PixelMesh> pixelMesh;

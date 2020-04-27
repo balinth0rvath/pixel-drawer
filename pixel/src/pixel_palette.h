@@ -4,6 +4,7 @@
 class PixelPalette {
 public:
 	PixelPalette();
+	GLuint getColor(const GLubyte& zeta, const GLubyte& alpha);
 	GLfloat getRed(const GLubyte& alpha, const GLubyte& zeta);
 	GLfloat getGreen(const GLubyte& alpha, const GLubyte& zeta);
 	GLfloat getBlue(const GLubyte& alpha, const GLubyte& zeta);

@@ -17,7 +17,8 @@ int  main()
 	auto pixelController = std::make_unique<PixelController>(
 								pixelRenderer, 
 								pixelSurface,
-								pixelGLProgramManager);
+								pixelGLProgramManager,
+								pixelPalette);
 
 	pixelSurface->initEGL();
 	pixelGLProgramManager->init();

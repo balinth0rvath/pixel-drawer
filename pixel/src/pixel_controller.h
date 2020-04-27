@@ -16,7 +16,8 @@ class PixelController {
 public:
 	PixelController(std::unique_ptr<PixelRenderer>& pixelRenderer,
 					std::unique_ptr<PixelSurface>& pixelSurface,
-					std::unique_ptr<PixelGLProgramManager>& pixelGLProgramManager);
+					std::unique_ptr<PixelGLProgramManager>& pixelGLProgramManager,
+					std::unique_ptr<PixelPalette>& pixelPalette);
 
 	void eventLoop();
 private:
@@ -27,6 +28,7 @@ private:
 	const std::unique_ptr<PixelRenderer>& pixelRenderer;
 	const std::unique_ptr<PixelSurface>& pixelSurface;
 	const std::unique_ptr<PixelGLProgramManager>& pixelGLProgramManager;
+	const std::unique_ptr<PixelPalette>& pixelPalette;
 
 	GLuint cursorX=0;
 	GLuint cursorY=0;

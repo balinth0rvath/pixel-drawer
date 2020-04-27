@@ -29,6 +29,11 @@ PixelPalette::PixelPalette()
 	this->palette = std::make_unique<std::vector<std::vector<GLuint>>>(paletteLocal);
 }
 
+GLuint PixelPalette::getColor(const GLubyte& zeta, const GLubyte& alpha)
+{
+	return (*this->palette)[zeta][alpha];
+}
+
 GLubyte PixelPalette::convertZeta(const GLubyte& zeta)
 {
 	return (zeta < 4) ? 4 - zeta : zeta;
