@@ -15,14 +15,14 @@ PixelController::PixelController(std::unique_ptr<PixelRenderer>& pixelRenderer,
 
 void PixelController::processButton(const int& pointerX, 	
 									const int& pointerY, 		
-									const int& button)
+									const int& toggle)
 {
 	pixelRenderer->unfocusPixel(cursorX, cursorY);
 	cursorX = pixelRenderer->getXSize() * ((GLfloat)pointerX / (GLfloat)(pixelSurface->windowWidth));
 	cursorY = pixelRenderer->getYSize() * ((GLfloat)(pixelSurface->windowHeight - pointerY) / (GLfloat)(pixelSurface->windowHeight));
 	pixelRenderer->focusPixel(cursorX, cursorY);
 
-	if (button==0)
+	if (!toggle)
 	{
 		pixelRenderer->drawPixel(cursorX, cursorY, currentColor);
 	
@@ -147,6 +147,7 @@ void PixelController::eventLoop()
 		{
 			XEvent e;
 			XNextEvent(pixelSurface->xDisplay, &e);
+			std::cout << "event type: " << e.type << std::endl;
 			switch (e.type)
 			{
 				case 2:
@@ -155,13 +156,19 @@ void PixelController::eventLoop()
 
 				break;
 				case 4:
+					this->buttonPressed = 1;
 					std::cout << "xbuttonpress event button=" << e.xbutton.button << std::endl;
-					processButton(e.xbutton.x, e.xbutton.y, e.xbutton.button);
+					processButton(e.xbutton.x, e.xbutton.y, 1);
+					break;	
+				case 5:
+					this->buttonPressed = 0;
 					break;	
 				case 6:
 					std::cout << "xmotion event x=" << e.xmotion.x << " y=" << e.xmotion.y << " xroot=" << e.xmotion.x_root << " yroot=" << e.xmotion.y_root << std::endl;
-					processButton(e.xmotion.x, e.xmotion.y, e.xmotion.button);
-					
+					if (this->buttonPressed)
+					{	
+						processButton(e.xmotion.x, e.xmotion.y, 0);
+				 	}	
 					break;
 
 				default:
