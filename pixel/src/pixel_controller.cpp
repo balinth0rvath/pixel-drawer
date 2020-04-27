@@ -21,8 +21,15 @@ void PixelController::processButton(const int& pointerX,
 	cursorX = pixelRenderer->getXSize() * ((GLfloat)pointerX / (GLfloat)(pixelSurface->windowWidth));
 	cursorY = pixelRenderer->getYSize() * ((GLfloat)(pixelSurface->windowHeight - pointerY) / (GLfloat)(pixelSurface->windowHeight));
 	pixelRenderer->focusPixel(cursorX, cursorY);
-	pixelRenderer->drawPixel(cursorX, cursorY, currentColor);
 
+	if (button==0)
+	{
+		pixelRenderer->drawPixel(cursorX, cursorY, currentColor);
+	
+	} else
+	{
+		pixelRenderer->togglePixel(cursorX, cursorY, currentColor);
+	}
 }
 
 void PixelController::processKeyCode(const int& keycode, int& shouldStop)
@@ -153,6 +160,7 @@ void PixelController::eventLoop()
 					break;	
 				case 6:
 					std::cout << "xmotion event x=" << e.xmotion.x << " y=" << e.xmotion.y << " xroot=" << e.xmotion.x_root << " yroot=" << e.xmotion.y_root << std::endl;
+					processButton(e.xmotion.x, e.xmotion.y, e.xmotion.button);
 					
 					break;
 

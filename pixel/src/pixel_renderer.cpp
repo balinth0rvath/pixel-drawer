@@ -68,6 +68,14 @@ void PixelRenderer::drawPixel(const GLuint& x, const GLuint& y, const GLuint& co
 {
 	GLuint index = y * this->xSize + x;
 
+	(*this->colorBuffer)[index] = color;
+	changePixelColor(x,y,color);
+}
+
+void PixelRenderer::togglePixel(const GLuint& x, const GLuint& y, const GLuint& color)
+{
+	GLuint index = y * this->xSize + x;
+
 	if ((*this->colorBuffer)[index] == this->backgroundColor)
 	{ 
 		(*this->colorBuffer)[index] = color;

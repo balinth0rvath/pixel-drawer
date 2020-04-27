@@ -11,6 +11,7 @@ public:
 	PixelRenderer(std::unique_ptr<PixelGLProgramManager>& pixelGLProgramManager, std::unique_ptr<PixelSurface>& pixelSurface, std::unique_ptr<PixelPalette>& pixelPalette);
 	void render();
 	void drawPixel(const GLuint& x, const GLuint& y, const GLuint& color);
+	void togglePixel(const GLuint& x, const GLuint& y, const GLuint& color);
 	void clearPixel(const GLuint& x, const GLuint& y);
 	void focusPixel(const GLuint& x, const GLuint& y);
 	void unfocusPixel(const GLuint& x, const GLuint& y);
