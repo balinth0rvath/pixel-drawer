@@ -17,9 +17,17 @@ void PixelController::processButton(const int& pointerX,
 									const int& pointerY, 		
 									const int& toggle)
 {
-	pixelRenderer->unfocusPixel(cursorX, cursorY);
+	if (pixelRenderer->checkCursorBounds(cursorX, cursorY))
+		pixelRenderer->unfocusPixel(cursorX, cursorY);
 	cursorX = pixelRenderer->getXSize() * ((GLfloat)pointerX / (GLfloat)(pixelSurface->windowWidth));
 	cursorY = pixelRenderer->getYSize() * ((GLfloat)(pixelSurface->windowHeight - pointerY) / (GLfloat)(pixelSurface->windowHeight));
+	
+
+	if (!pixelRenderer->checkCursorBounds(cursorX,cursorY))
+	{
+		return;
+	}
+
 	pixelRenderer->focusPixel(cursorX, cursorY);
 
 	if (!toggle)
@@ -136,7 +144,8 @@ void PixelController::eventLoop()
 	uint8_t counter=0;
 	uint32_t sumRenderTime=0;
 		
-	pixelRenderer->focusPixel(cursorX,cursorY);
+	if (pixelRenderer->checkCursorBounds(cursorX,cursorY))
+		pixelRenderer->focusPixel(cursorX,cursorY);
 	
 	for (;!shouldStop;)
 	{
