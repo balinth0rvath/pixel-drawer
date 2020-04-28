@@ -12,7 +12,6 @@ PixelController::PixelController(std::unique_ptr<PixelRenderer>& pixelRenderer,
 								pixelFileManager(pixelFileManager)
 						
 {
-
 }
 
 void PixelController::processButton(const int& pointerX, 	
@@ -125,13 +124,40 @@ void PixelController::processKeyCode(const int& keycode, int& shouldStop)
 			}
 			break;
 		case X11_KEY_1:
+			this->currentFile = 1;
 			this->pixelFileManager->loadFile(1, pixelRenderer);	
 			break;
 		case X11_KEY_2:
+			this->currentFile = 2;
 			this->pixelFileManager->loadFile(2, pixelRenderer);	
 			break;
 		case X11_KEY_3:
+			this->currentFile = 3;
 			this->pixelFileManager->loadFile(3, pixelRenderer);	
+			break;
+		case X11_KEY_4:
+			this->currentFile = 4;
+			this->pixelFileManager->loadFile(4, pixelRenderer);	
+			break;
+		case X11_KEY_5:
+			this->currentFile = 5;
+			this->pixelFileManager->loadFile(5, pixelRenderer);	
+			break;
+		case X11_KEY_6:
+			this->currentFile = 6;
+			this->pixelFileManager->loadFile(6, pixelRenderer);	
+			break;
+		case X11_KEY_7:
+			this->currentFile = 7;
+			this->pixelFileManager->loadFile(7, pixelRenderer);	
+			break;
+		case X11_KEY_8:
+			this->currentFile = 8;
+			this->pixelFileManager->loadFile(8, pixelRenderer);	
+			break;
+		case X11_KEY_9:
+			this->currentFile = 9;
+			this->pixelFileManager->loadFile(9, pixelRenderer);	
 			break;
 		default:
 			break;
@@ -149,6 +175,7 @@ void PixelController::eventLoop()
 	if (pixelRenderer->checkCursorBounds(cursorX,cursorY))
 		pixelRenderer->focusPixel(cursorX,cursorY);
 	
+	this->pixelFileManager->loadFile(this->currentFile, pixelRenderer);	
 	for (;!shouldStop;)
 	{
 		gettimeofday(&startRenderTime, NULL);
@@ -158,7 +185,6 @@ void PixelController::eventLoop()
 		{
 			XEvent e;
 			XNextEvent(pixelSurface->xDisplay, &e);
-			std::cout << "event type: " << e.type << std::endl;
 			switch (e.type)
 			{
 				case 2:
@@ -168,14 +194,12 @@ void PixelController::eventLoop()
 				break;
 				case 4:
 					this->buttonPressed = 1;
-					std::cout << "xbuttonpress event button=" << e.xbutton.button << std::endl;
 					processButton(e.xbutton.x, e.xbutton.y, 1);
 					break;	
 				case 5:
 					this->buttonPressed = 0;
 					break;	
 				case 6:
-					std::cout << "xmotion event x=" << e.xmotion.x << " y=" << e.xmotion.y << " xroot=" << e.xmotion.x_root << " yroot=" << e.xmotion.y_root << std::endl;
 					if (this->buttonPressed)
 					{	
 						processButton(e.xmotion.x, e.xmotion.y, 0);

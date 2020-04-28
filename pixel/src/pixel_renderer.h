@@ -37,6 +37,7 @@ public:
 	GLuint checkCursorBounds(const GLuint& cursorX, const GLuint& cursorY) const;
 	void setColorBuffer(const std::unique_ptr<std::vector<GLuint>>& copyBuffer);
 	void getColorBuffer(std::unique_ptr<std::vector<GLuint>>& copyBuffer) const;
+	GLuint getBackgroundColor() const { return this->backgroundColor;};
 private:
 	void show() { std::cout << "alpha: " << sphereAngleAlpha << " zeta: " << sphereAngleZeta << std::endl; }; 
 	std::unique_ptr<PixelMesh> pixelMesh;

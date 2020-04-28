@@ -228,6 +228,5 @@ GLuint PixelRenderer::getSubColorIndex() const
 
 GLuint PixelRenderer::checkCursorBounds(const GLuint& cursorX, const GLuint& cursorY) const
 {
-	std::cout << "Y: " << cursorY << std::endl;
 	return (cursorX <= this->xSize && cursorY <= this->ySize);
 }

@@ -10,12 +10,22 @@ std::string PixelFileManager::createFilename(const int& fileNumber)
 void PixelFileManager::loadFile(const int& fileNumber, const std::unique_ptr<PixelRenderer>& pixelRenderer)
 {
 	std::unique_ptr<std::vector<GLuint>> copyBuffer = std::make_unique<std::vector<GLuint>>(0);
-	std::ifstream pixelFileStream(createFilename(fileNumber));
+	std::string filename = createFilename(fileNumber);
+	std::ifstream pixelFileStream(filename);
 
+	if (!pixelFileStream.is_open())
+	{
+		std::cout << filename << " not found. Create empty canvas " << std::endl;
+		std::unique_ptr<std::vector<GLuint>> copyBuffer = 
+			std::make_unique<std::vector<GLuint>>(
+				pixelRenderer->getXSize() * pixelRenderer->getYSize(), 
+				pixelRenderer->getBackgroundColor());
+		pixelRenderer->setColorBuffer(copyBuffer);
+		return;
+	}
 	char str[7];	
 	while (pixelFileStream.get(str,7))
 	{
-		std::cout << str << std::endl;
 		GLuint pixel = 0;
 		for(int pos = 0; pos < 6; ++pos)
 		{
@@ -25,6 +35,7 @@ void PixelFileManager::loadFile(const int& fileNumber, const std::unique_ptr<Pix
 		}
 		copyBuffer->push_back(pixel);
 	}	
+	
 	pixelRenderer->setColorBuffer(copyBuffer);
 }
 

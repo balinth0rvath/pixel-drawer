@@ -12,6 +12,12 @@
 #define X11_KEY_1		0x0a
 #define X11_KEY_2		0x0b
 #define X11_KEY_3		0x0c
+#define X11_KEY_4		0x0d
+#define X11_KEY_5		0x0e
+#define X11_KEY_6		0x0f
+#define X11_KEY_7		0x10
+#define X11_KEY_8		0x11
+#define X11_KEY_9		0x12
 
 class PixelController {
 public:
