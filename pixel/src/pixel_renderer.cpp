@@ -21,12 +21,27 @@ void PixelRenderer::generateSphere(const std::unique_ptr<PixelSurface>& pixelSur
 
 void PixelRenderer::generateCanvas() 
 {
-
 	this->colorBuffer = std::make_unique<std::vector<GLuint>>( xSize * ySize, backgroundColor );
 	this->vertexBufferMatrix = std::make_unique<std::vector<GLfloat>>();	
 	this->pixelMesh->generateVertexBufferMatrix(vertexBufferMatrix, colorBuffer, xSize, ySize);	
-
 }
+
+void PixelRenderer::setColorBuffer(const std::unique_ptr<std::vector<GLuint>>& copyBuffer)
+{
+	(*this->colorBuffer) = *copyBuffer;
+	repaint();
+}
+void PixelRenderer::repaint()
+{
+	for(GLuint y=0; y < this->ySize; ++y)
+		for(GLuint x=0; x < this->xSize; ++x)
+		{
+			GLuint index = y * this->xSize + x;
+			changePixelColor(x,y,(*colorBuffer)[index]);
+		}
+}
+
+
 void PixelRenderer::focusPixel(const GLuint& x, const GLuint& y)
 {
 	changePixelShadow(x,y,this->cursorColor);

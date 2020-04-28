@@ -35,6 +35,7 @@ public:
 	GLuint getMainColorIndex() const;
 	GLuint getSubColorIndex() const;
 	GLuint checkCursorBounds(const GLuint& cursorX, const GLuint& cursorY) const;
+	void setColorBuffer(const std::unique_ptr<std::vector<GLuint>>& copyBuffer);
 private:
 	void show() { std::cout << "alpha: " << sphereAngleAlpha << " zeta: " << sphereAngleZeta << std::endl; }; 
 	std::unique_ptr<PixelMesh> pixelMesh;
@@ -53,10 +54,13 @@ private:
 	GLint sphereAngleZeta = 0;
 		
 	inline GLfloat getSphereAngleAlpha() { return (2.0f * M_PI * (GLfloat)sphereAngleAlpha / 360.0f); };
+	
 	inline GLfloat getSphereAngleZeta() { return (2.0f * M_PI * (GLfloat)sphereAngleZeta / 360.0f); };
 	GLuint backgroundColor = 0x202020;
 	GLuint cursorColor = 0x333333;
 	GLuint shadowColor = 0x000000;
+
+	void repaint();
 
 };
 

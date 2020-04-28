@@ -3,11 +3,13 @@
 PixelController::PixelController(std::unique_ptr<PixelRenderer>& pixelRenderer,
 								std::unique_ptr<PixelSurface>& pixelSurface,
 								std::unique_ptr<PixelGLProgramManager>& pixelGLProgramManager,
-								std::unique_ptr<PixelPalette>& pixelPalette) :
+								std::unique_ptr<PixelPalette>& pixelPalette,
+								std::unique_ptr<PixelFileManager>& pixelFileManager) :
 								pixelRenderer(pixelRenderer),
 								pixelSurface(pixelSurface),
 								pixelGLProgramManager(pixelGLProgramManager),
-								pixelPalette(pixelPalette)
+								pixelPalette(pixelPalette),
+								pixelFileManager(pixelFileManager)
 						
 {
 
@@ -123,14 +125,12 @@ void PixelController::processKeyCode(const int& keycode, int& shouldStop)
 			}
 			break;
 		case X11_KEY_1:
-			this->currentColor ^= (0xff << 0x10);
-		break;
+			this->pixelFileManager->loadFile(0, pixelRenderer);	
+			break;
 		case X11_KEY_2:
-			this->currentColor ^= (0xff << 0x08);
-		break;
+			break;
 		case X11_KEY_3:
-			this->currentColor ^= (0xff);
-		break;
+			break;
 		default:
 			break;
 	}

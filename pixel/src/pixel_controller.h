@@ -1,4 +1,5 @@
 #include "src/pixel_common_headers.h"
+#include "src/pixel_file_manager.h"
 #include "src/pixel_renderer.h"
 #include "src/pixel_animation.h"
 
@@ -17,7 +18,8 @@ public:
 	PixelController(std::unique_ptr<PixelRenderer>& pixelRenderer,
 					std::unique_ptr<PixelSurface>& pixelSurface,
 					std::unique_ptr<PixelGLProgramManager>& pixelGLProgramManager,
-					std::unique_ptr<PixelPalette>& pixelPalette);
+					std::unique_ptr<PixelPalette>& pixelPalette,
+					std::unique_ptr<PixelFileManager>& pixelFileManager);
 
 	void eventLoop();
 private:
@@ -29,6 +31,7 @@ private:
 	const std::unique_ptr<PixelSurface>& pixelSurface;
 	const std::unique_ptr<PixelGLProgramManager>& pixelGLProgramManager;
 	const std::unique_ptr<PixelPalette>& pixelPalette;
+	const std::unique_ptr<PixelFileManager>& pixelFileManager;
 
 	GLuint cursorX=0;
 	GLuint cursorY=0;

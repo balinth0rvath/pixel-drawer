@@ -14,6 +14,6 @@ SET(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE NEVER)
 SET(BASEPATH "${CMAKE_SOURCE_DIR}")
 INCLUDE_DIRECTORIES("${BASEPATH}")
 
-ADD_EXECUTABLE(pixel src/pixel_mesh.cpp src/pixel_palette.cpp src/pixel_animation.cpp src/pixel.cpp src/pixel_renderer.cpp src/pixel_surface.cpp src/pixel_gl_program_manager.cpp src/pixel_controller.cpp)
+ADD_EXECUTABLE(pixel src/pixel_file_manager.cpp src/pixel_mesh.cpp src/pixel_palette.cpp src/pixel_animation.cpp src/pixel.cpp src/pixel_renderer.cpp src/pixel_surface.cpp src/pixel_gl_program_manager.cpp src/pixel_controller.cpp)
 TARGET_LINK_LIBRARIES(pixel X11 EGL GLESv2)
 
