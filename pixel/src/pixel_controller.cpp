@@ -125,11 +125,13 @@ void PixelController::processKeyCode(const int& keycode, int& shouldStop)
 			}
 			break;
 		case X11_KEY_1:
-			this->pixelFileManager->loadFile(0, pixelRenderer);	
+			this->pixelFileManager->loadFile(1, pixelRenderer);	
 			break;
 		case X11_KEY_2:
+			this->pixelFileManager->loadFile(2, pixelRenderer);	
 			break;
 		case X11_KEY_3:
+			this->pixelFileManager->loadFile(3, pixelRenderer);	
 			break;
 		default:
 			break;
@@ -195,7 +197,7 @@ void PixelController::eventLoop()
 		
 		if (!counter)
 		{
-			pixelFileManager->saveFile(0,pixelRenderer);	
+			pixelFileManager->saveFile(currentFile,pixelRenderer);	
 			counter=0;
 			double fps = 1000000.0f / (double)(sumRenderTime >> 8);
 			std::cout << "Render time: " << (sumRenderTime >> 8) << " usec" << " FPS: " << fps << std::endl;

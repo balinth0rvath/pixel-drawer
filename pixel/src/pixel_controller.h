@@ -36,6 +36,7 @@ private:
 	GLuint cursorX=0;
 	GLuint cursorY=0;
 	GLuint currentColor=0x0;
+	GLuint currentFile=1;
 	GLuint dRotation = 30;
 	GLuint buttonPressed = 0;
 };
