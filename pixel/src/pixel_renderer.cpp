@@ -31,6 +31,12 @@ void PixelRenderer::setColorBuffer(const std::unique_ptr<std::vector<GLuint>>& c
 	(*this->colorBuffer) = *copyBuffer;
 	repaint();
 }
+
+void PixelRenderer::getColorBuffer(std::unique_ptr<std::vector<GLuint>>& copyBuffer) const
+{
+	*copyBuffer = (*this->colorBuffer);
+}
+
 void PixelRenderer::repaint()
 {
 	for(GLuint y=0; y < this->ySize; ++y)

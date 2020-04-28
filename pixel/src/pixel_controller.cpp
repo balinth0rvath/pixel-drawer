@@ -195,6 +195,7 @@ void PixelController::eventLoop()
 		
 		if (!counter)
 		{
+			pixelFileManager->saveFile(0,pixelRenderer);	
 			counter=0;
 			double fps = 1000000.0f / (double)(sumRenderTime >> 8);
 			std::cout << "Render time: " << (sumRenderTime >> 8) << " usec" << " FPS: " << fps << std::endl;

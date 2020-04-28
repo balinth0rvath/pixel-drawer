@@ -5,6 +5,9 @@
 #include  <GLES2/gl2.h>
 #include  <EGL/egl.h>
 #include <iostream>
+#include <fstream>
+#include <string>
+#include <sstream>
 #include <memory>
 #include <vector>
 #include <map>
@@ -14,3 +17,4 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <math.h>
 #include <stdlib.h>
+
