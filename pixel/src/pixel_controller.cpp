@@ -181,10 +181,10 @@ void PixelController::eventLoop()
 		gettimeofday(&startRenderTime, NULL);
 		pixelRenderer->render();
 		gettimeofday(&endRenderTime, NULL);
-		while (XPending(pixelSurface->xDisplay))
+		while (XPending(pixelSurface->display))
 		{
 			XEvent e;
-			XNextEvent(pixelSurface->xDisplay, &e);
+			XNextEvent(pixelSurface->display, &e);
 			switch (e.type)
 			{
 				case 2:

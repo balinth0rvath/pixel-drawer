@@ -68,7 +68,7 @@ void PixelSurface::logConfigs()
 void PixelSurface::initEGL() {
 
 	initDisplayClient();
-    this->eglDisplay  =  eglGetDisplay( (EGLNativeDisplayType) this->xDisplay );
+    this->eglDisplay  =  eglGetDisplay( (EGLNativeDisplayType) this->display );
     if ( this->eglDisplay == EGL_NO_DISPLAY ) 
 	{
 		  std::cout << "Got no EGL display." << std::endl;
@@ -105,7 +105,7 @@ void PixelSurface::initEGL() {
 
 	logConfigs();
 
-    this->eglSurface = eglCreateWindowSurface ( this->eglDisplay, this->configs.front(), this->xWindow, NULL );
+    this->eglSurface = eglCreateWindowSurface ( this->eglDisplay, this->configs.front(), this->window, NULL );
     if ( this->eglSurface == EGL_NO_SURFACE ) {
       std::cout << "Unable to create EGL surface eglError: " << eglGetError() << std::endl;
       exit(1);
@@ -123,36 +123,6 @@ void PixelSurface::initEGL() {
    eglMakeCurrent( this->eglDisplay, this->eglSurface, this->eglSurface, this->eglContext );
 
 };
-void PixelSurface::initDisplayClient() {
-    this->xDisplay = XOpenDisplay ( NULL ); 
-
-    if ( this->xDisplay == NULL ) {
-		std::cout << "cannot connect to X server " << std::endl;
-		exit(1);
-    }
- 
-    Window root  =  DefaultRootWindow( this->xDisplay );
- 
-    XSetWindowAttributes  swa;
-    swa.event_mask  =  ExposureMask | PointerMotionMask | KeyPressMask | ButtonPressMask | ButtonReleaseMask; 
- 
-    this->xWindow  = XCreateWindow (   // create a window with the provided parameters
-		this->xDisplay, 
-		root,
-		0, 0, 
-		this->windowWidth, this->windowHeight,   
-		0,
-		CopyFromParent, 
-		InputOutput,
-		CopyFromParent, 
-		CWEventMask,
-		&swa );
- 
-   XMapWindow ( this->xDisplay , this->xWindow );             // make the window visible on the screen
-
-   XStoreName ( this->xDisplay , this->xWindow , "example" ); // give the window a name
-
-};
 
 void PixelSurface::closeEGL()
 {
@@ -163,9 +133,5 @@ void PixelSurface::closeEGL()
 	closeDisplayClient();
 };
 
-void PixelSurface::closeDisplayClient()
-{
-   XDestroyWindow    ( this->xDisplay, this->xWindow );
-   XCloseDisplay     ( this->xDisplay );
-};
+
 

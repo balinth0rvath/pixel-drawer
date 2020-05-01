@@ -14,16 +14,15 @@ public:
 	PixelSurface& operator=(PixelSurface&& s) = delete;
 	~PixelSurface();
 
-	GLuint windowWidth=800;
-	GLuint windowHeight=800;
-	Display* xDisplay;
-
+	GLuint windowWidth=700;
+	GLuint windowHeight=700;
+	Display* display;
+protected:
+	Window window;
 private: 
-	void initDisplayClient();
-	void closeDisplayClient();
+	virtual void initDisplayClient() = 0;
+	virtual void closeDisplayClient() = 0;
 	void logConfigs();
-	Window xWindow;
-
 	EGLDisplay eglDisplay;
 	std::vector<EGLConfig> configs;
 	EGLContext	eglContext;
