@@ -41,7 +41,7 @@ void PixelController::processButton(const int& pointerX,
 	}
 }
 
-void PixelController::processKeyCode(const int& keycode, int& shouldStop)
+void PixelController::processKeyCode(const int& keycode)
 {
 	switch (keycode)
 	{
@@ -167,7 +167,6 @@ void PixelController::processKeyCode(const int& keycode, int& shouldStop)
 void PixelController::eventLoop()
 {
 	struct timeval startRenderTime, endRenderTime;
-	int shouldStop=0;
 
 	uint8_t counter=0;
 	uint32_t sumRenderTime=0;
@@ -189,7 +188,7 @@ void PixelController::eventLoop()
 			{
 				case 2:
 		
-					processKeyCode(e.xkey.keycode, shouldStop);
+					processKeyCode(e.xkey.keycode);
 
 				break;
 				case 4:

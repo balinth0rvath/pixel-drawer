@@ -29,7 +29,7 @@ public:
 
 	void eventLoop();
 private:
-	void processKeyCode(const int& keycode, int& shouldStop);
+	void processKeyCode(const int& keycode);
 	void processButton( const int& pointerX, 
 						const int& pointerY, 		
 						const int& button);
@@ -38,6 +38,8 @@ private:
 	const std::unique_ptr<PixelGLProgramManager>& pixelGLProgramManager;
 	const std::unique_ptr<PixelPalette>& pixelPalette;
 	const std::unique_ptr<PixelFileManager>& pixelFileManager;
+
+	int shouldStop=0;
 
 	GLuint cursorX=0;
 	GLuint cursorY=0;
