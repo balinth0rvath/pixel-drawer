@@ -1,3 +1,4 @@
+#ifndef IMX6
 #include "pixel_surface_x11.h"
 
 
@@ -37,3 +38,4 @@ void PixelSurfaceX11::closeDisplayClient()
    XDestroyWindow    ( this->display, this->window );
    XCloseDisplay     ( this->display );
 };
+#endif // IMX6
