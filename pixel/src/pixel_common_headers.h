@@ -1,3 +1,4 @@
+#ifdef IMX6
 #include  <sys/time.h>
 #include  <X11/Xlib.h>
 #include  <X11/Xatom.h>
@@ -17,4 +18,4 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <math.h>
 #include <stdlib.h>
-
+#endif // ABC
