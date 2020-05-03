@@ -16,9 +16,24 @@ public:
 
 	GLuint windowWidth=700;
 	GLuint windowHeight=700;
+
+	// TODO port 
+#ifdef IMX6
+	wl_display* display;
+#else
 	Display* display;
+#endif // IMX6
 protected:
+#ifdef IMX6
+	wl_compositor *compositor;
+	wl_shell *shell;
+	wl_registry* registry;
+	wl_egl_window * window;
+	wl_surface * surface;
+	wl_shell_surface* shell_surface;
+#else
 	Window window;
+#endif // IMX6
 private: 
 	virtual void initDisplayClient() = 0;
 	virtual void closeDisplayClient() = 0;

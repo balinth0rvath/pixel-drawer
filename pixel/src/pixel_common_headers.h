@@ -9,8 +9,8 @@
 #	include  <X11/Xutil.h>
 #endif
 
-#include  <GLES2/gl2.h>
-#include  <EGL/egl.h>
+#include <GLES2/gl2.h>
+#include <EGL/egl.h>
 #include <iostream>
 #include <fstream>
 #include <string>

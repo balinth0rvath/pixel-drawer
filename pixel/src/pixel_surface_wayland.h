@@ -5,8 +5,8 @@
 class PixelSurfaceWayland : public PixelSurface {
 public:
 private:
-
 	void initDisplayClient() override;
 	void closeDisplayClient() override;
+
 };
 

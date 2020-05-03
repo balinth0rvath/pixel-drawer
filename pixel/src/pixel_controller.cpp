@@ -180,6 +180,7 @@ void PixelController::eventLoop()
 		gettimeofday(&startRenderTime, NULL);
 		pixelRenderer->render();
 		gettimeofday(&endRenderTime, NULL);
+#ifndef IMX6
 		while (XPending(pixelSurface->display))
 		{
 			XEvent e;
@@ -209,7 +210,7 @@ void PixelController::eventLoop()
 					break;
 			}
 		}
-		
+#endif //IMX6	
 		counter++;
 		uint32_t start = startRenderTime.tv_usec; 	
 		uint32_t end = endRenderTime.tv_usec; 	
