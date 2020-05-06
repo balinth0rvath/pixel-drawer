@@ -106,7 +106,11 @@ void PixelSurface::initEGL() {
 	logConfigs();
 
 #ifdef IMX6
-    //this->eglSurface = eglCreateWindowSurface ( this->eglDisplay, this->configs.front(), *this->window, NULL );
+    this->eglSurface = eglCreateWindowSurface ( 
+		this->eglDisplay, 
+		this->configs.front(), 	
+		this->window, 
+		NULL );
 #else
     this->eglSurface = eglCreateWindowSurface ( this->eglDisplay, this->configs.front(), this->window, NULL );
 #endif

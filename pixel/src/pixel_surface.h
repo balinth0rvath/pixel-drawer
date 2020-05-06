@@ -1,6 +1,8 @@
 #pragma once
 #include "pixel_common_headers.h"
 
+
+
 class PixelSurface {
 public:
 	PixelSurface();
@@ -25,10 +27,10 @@ public:
 #endif // IMX6
 protected:
 #ifdef IMX6
-	wl_compositor *compositor;
-	wl_shell *shell;
+	wl_compositor* compositor;
+	wl_shell* shell;
 	wl_registry* registry;
-	wl_egl_window * window;
+	Window window;
 	wl_surface * surface;
 	wl_shell_surface* shell_surface;
 #else
