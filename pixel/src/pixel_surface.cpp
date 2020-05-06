@@ -5,8 +5,6 @@ PixelSurface::PixelSurface() {
 	EGL_RED_SIZE, 8,
 	EGL_GREEN_SIZE, 8,
 	EGL_BLUE_SIZE, 8,
-	EGL_ALPHA_SIZE, 8,
-	EGL_DEPTH_SIZE, 8,
 	EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
 	EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
 	EGL_NONE};
@@ -51,6 +49,7 @@ void PixelSurface::logConfigs()
 		{"EGL_TRANSPARENT_BLUE_VALUE", EGL_TRANSPARENT_BLUE_VALUE}
 		
 	};
+/*
 	std::sort(this->configs.begin(), this->configs.end());
 	for(const auto& config : this->configs)
 	{
@@ -62,6 +61,7 @@ void PixelSurface::logConfigs()
 		}
 		//getchar();
 	}
+*/
 
 }
 
@@ -94,7 +94,7 @@ void PixelSurface::initEGL() {
 
 	this->configs.resize(maxConfigs);  
 
-    if ( !eglChooseConfig( this->eglDisplay, &this->attribList.front(), &this->configs.front(), maxConfigs, &numConfigs ) ) {
+    if ( !eglChooseConfig( this->eglDisplay, &this->attribList[0], &this->configs[0], maxConfigs, &numConfigs ) ) {
 		GLenum e = glGetError();
 		printf("Error choosing egl configs: %i num configs: %i \n", e, numConfigs); 
 		exit(1);
@@ -104,11 +104,13 @@ void PixelSurface::initEGL() {
 	this->configs.resize(numConfigs);  
 
 	logConfigs();
+	std::cout << "configs[0] address: " << &this->configs.front() << std::endl;
 
+	std::cout << "attribList[0] address: " << &this->attribList.front() << std::endl;
 #ifdef IMX6
     this->eglSurface = eglCreateWindowSurface ( 
 		this->eglDisplay, 
-		this->configs.front(), 	
+		&this->configs.front(), 	
 		reinterpret_cast<EGLNativeWindowType>(this->window), 
 		NULL );
 #else
