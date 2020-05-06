@@ -30,7 +30,7 @@ protected:
 	wl_compositor* compositor;
 	wl_shell* shell;
 	wl_registry* registry;
-	Window window;
+	wl_egl_window* window;
 	wl_surface * surface;
 	wl_shell_surface* shell_surface;
 #else

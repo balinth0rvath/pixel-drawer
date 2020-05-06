@@ -39,8 +39,8 @@ void PixelSurfaceWayland::initDisplayClient() {
 		exit(1);   
 	}
 	wl_shell_surface_set_toplevel(this->shell_surface);	
+	this->window = wl_egl_window_create(this->surface,this->windowWidth,this->windowHeight);
 	std::cout << "done";
-	exit(1);
 }
 
 

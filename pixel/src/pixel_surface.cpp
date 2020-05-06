@@ -109,7 +109,7 @@ void PixelSurface::initEGL() {
     this->eglSurface = eglCreateWindowSurface ( 
 		this->eglDisplay, 
 		this->configs.front(), 	
-		this->window, 
+		reinterpret_cast<EGLNativeWindowType>(this->window), 
 		NULL );
 #else
     this->eglSurface = eglCreateWindowSurface ( this->eglDisplay, this->configs.front(), this->window, NULL );
