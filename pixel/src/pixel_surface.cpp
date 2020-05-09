@@ -107,19 +107,6 @@ void PixelSurface::initEGL() {
 	std::cout << "configs[0] address: " << &this->configs.front() << std::endl;
 
 	std::cout << "attribList[0] address: " << &this->attribList.front() << std::endl;
-#ifdef IMX6
-    this->eglSurface = eglCreateWindowSurface ( 
-		this->eglDisplay, 
-		&this->configs.front(), 	
-		reinterpret_cast<EGLNativeWindowType>(this->window), 
-		NULL );
-#else
-    this->eglSurface = eglCreateWindowSurface ( this->eglDisplay, this->configs.front(), this->window, NULL );
-#endif
-    if ( this->eglSurface == EGL_NO_SURFACE ) {
-      std::cout << "Unable to create EGL surface eglError: " << eglGetError() << std::endl;
-      exit(1);
-   }
    EGLint ctxattr[] = {
       EGL_CONTEXT_CLIENT_VERSION, 2,
       EGL_NONE
@@ -129,6 +116,27 @@ void PixelSurface::initEGL() {
       std::cout << "Unable to create EGL context eglError: " << eglGetError << std::endl;
       exit(1);
    }
+#ifdef IMX6
+	this->window = wl_egl_window_create(this->surface,this->windowWidth,this->windowHeight);
+	if (this->window == NULL)
+	{
+		std::cout << "no window";
+		exit(1);
+	}
+    this->eglSurface = eglCreateWindowSurface ( 
+		this->eglDisplay, 
+		this->configs.front(), 	
+		reinterpret_cast<EGLNativeWindowType>(this->window), 
+		NULL );
+#else
+	this->eglSurface = eglCreateWindowSurface ( this->eglDisplay, this->configs.front(), this->window, NULL );
+#endif
+    if ( this->eglSurface == EGL_NO_SURFACE ) {
+      std::cout << "Unable to create EGL surface eglError: " << eglGetError() << std::endl;
+      exit(1);
+   }
+
+
  
    eglMakeCurrent( this->eglDisplay, this->eglSurface, this->eglSurface, this->eglContext );
 
