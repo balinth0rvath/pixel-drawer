@@ -1,0 +1,16 @@
+wl_egl_window_create (surface=0x284e0, width=800, height=600) at /usr/src/debug/gpu-viv-wl/git-r0/git/driver/driver/khronos/libEGL/api/gc_egl_wayland.c:2025
+2025	/usr/src/debug/gpu-viv-wl/git-r0/git/driver/driver/khronos/libEGL/api/gc_egl_wayland.c: No such file or directory.
+(gdb) 
+2025	in /usr/src/debug/gpu-viv-wl/git-r0/git/driver/driver/khronos/libEGL/api/gc_egl_wayland.c
+(gdb) 
+
+0x76fa4d88	2025	in /usr/src/debug/gpu-viv-wl/git-r0/git/driver/driver/khronos/libEGL/api/gc_egl_wayland.c
+(gdb) 
+2030	in /usr/src/debug/gpu-viv-wl/git-r0/git/driver/driver/khronos/libEGL/api/gc_egl_wayland.c
+(gdb) 
+0x76fa4d90	2030	in /usr/src/debug/gpu-viv-wl/git-r0/git/driver/driver/khronos/libEGL/api/gc_egl_wayland.c
+(gdb) 
+2025	in /usr/src/debug/gpu-viv-wl/git-r0/git/driver/driver/khronos/libEGL/api/gc_egl_wayland.c
+(gdb) 
+2030	in /usr/src/debug/gpu-viv-wl/git-r0/git/driver/driver/khronos/libEGL/api/gc_egl_wayland.c
+
