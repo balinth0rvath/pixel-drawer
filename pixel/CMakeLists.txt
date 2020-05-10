@@ -45,5 +45,5 @@ ADD_EXECUTABLE(
 			src/pixel_surface_wayland.cpp
 			src/pixel_gl_program_manager.cpp 
 			src/pixel_controller.cpp)
-TARGET_LINK_LIBRARIES(pixel X11 wayland-client wayland-egl EGL GLESv2)
+TARGET_LINK_LIBRARIES(pixel X11 wayland-client EGL GLESv2 wayland-egl)
 
