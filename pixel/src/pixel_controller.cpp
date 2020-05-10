@@ -45,10 +45,10 @@ void PixelController::processKeyCode(const int& keycode)
 {
 	switch (keycode)
 	{
-		case X11_ESC:
+		case ESC:
 			shouldStop=1;
 			break;
-		case X11_SPACE:
+		case SPACE:
 			if (pixelRenderer->pixelAnimation->getSphereAnimationState() == PixelAnimationState::stoppedFront)
 			{
 				GLuint zeta = pixelRenderer->getMainColorIndex();
@@ -64,7 +64,7 @@ void PixelController::processKeyCode(const int& keycode)
 				pixelRenderer->pixelAnimation->pullSphereFront();
 			}
 			break;
-		case X11_KEY_UP:
+		case KEY_UP:
 			if (pixelRenderer->pixelAnimation->getSphereAnimationState() == PixelAnimationState::stoppedAway)
 			{
 				if (this->pixelRenderer->getYSize()-1 > cursorY) 
@@ -80,7 +80,7 @@ void PixelController::processKeyCode(const int& keycode)
 			}
 
 			break;
-		case X11_KEY_DOWN:
+		case KEY_DOWN:
 			if (pixelRenderer->pixelAnimation->getSphereAnimationState() == PixelAnimationState::stoppedAway)
 			{
 				if (cursorY != 0)
@@ -95,7 +95,7 @@ void PixelController::processKeyCode(const int& keycode)
 				pixelRenderer->decAlpha(dRotation);
 			}
 			break;
-		case X11_KEY_LEFT:
+		case KEY_LEFT:
 			if (pixelRenderer->pixelAnimation->getSphereAnimationState() == PixelAnimationState::stoppedAway)
 			{
 				if (cursorX != 0)
@@ -109,7 +109,7 @@ void PixelController::processKeyCode(const int& keycode)
 				pixelRenderer->decZeta(dRotation);
 			}
 			break;
-		case X11_KEY_RIGHT:
+		case KEY_RIGHT:
 			if (pixelRenderer->pixelAnimation->getSphereAnimationState() == PixelAnimationState::stoppedAway)
 			{
 				if (this->pixelRenderer->getXSize()-1 > cursorX)
@@ -123,39 +123,39 @@ void PixelController::processKeyCode(const int& keycode)
 				pixelRenderer->incZeta(dRotation);
 			}
 			break;
-		case X11_KEY_1:
+		case KEY_1:
 			this->currentFile = 1;
 			this->pixelFileManager->loadFile(1, pixelRenderer);	
 			break;
-		case X11_KEY_2:
+		case KEY_2:
 			this->currentFile = 2;
 			this->pixelFileManager->loadFile(2, pixelRenderer);	
 			break;
-		case X11_KEY_3:
+		case KEY_3:
 			this->currentFile = 3;
 			this->pixelFileManager->loadFile(3, pixelRenderer);	
 			break;
-		case X11_KEY_4:
+		case KEY_4:
 			this->currentFile = 4;
 			this->pixelFileManager->loadFile(4, pixelRenderer);	
 			break;
-		case X11_KEY_5:
+		case KEY_5:
 			this->currentFile = 5;
 			this->pixelFileManager->loadFile(5, pixelRenderer);	
 			break;
-		case X11_KEY_6:
+		case KEY_6:
 			this->currentFile = 6;
 			this->pixelFileManager->loadFile(6, pixelRenderer);	
 			break;
-		case X11_KEY_7:
+		case KEY_7:
 			this->currentFile = 7;
 			this->pixelFileManager->loadFile(7, pixelRenderer);	
 			break;
-		case X11_KEY_8:
+		case KEY_8:
 			this->currentFile = 8;
 			this->pixelFileManager->loadFile(8, pixelRenderer);	
 			break;
-		case X11_KEY_9:
+		case KEY_9:
 			this->currentFile = 9;
 			this->pixelFileManager->loadFile(9, pixelRenderer);	
 			break;

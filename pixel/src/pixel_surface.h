@@ -33,6 +33,7 @@ protected:
 	wl_egl_window* window;
 	wl_surface * surface;
 	wl_shell_surface* shell_surface;
+	wl_seat* seat;
 #else
 	Window window;
 #endif // IMX6

@@ -3,21 +3,41 @@
 #include "src/pixel_renderer.h"
 #include "src/pixel_animation.h"
 
-#define X11_KEY_UP 		0x6f
-#define X11_KEY_LEFT 	0x71
-#define X11_KEY_RIGHT 	0x72
-#define X11_KEY_DOWN 	0x74
-#define X11_SPACE 		0x41
-#define X11_ESC 		0x09
-#define X11_KEY_1		0x0a
-#define X11_KEY_2		0x0b
-#define X11_KEY_3		0x0c
-#define X11_KEY_4		0x0d
-#define X11_KEY_5		0x0e
-#define X11_KEY_6		0x0f
-#define X11_KEY_7		0x10
-#define X11_KEY_8		0x11
-#define X11_KEY_9		0x12
+#ifdef IMX6
+
+#define KEY_UP 		0x6f
+#define KEY_LEFT 	0x71
+#define KEY_RIGHT 	0x72
+#define KEY_DOWN 	0x74
+#define SPACE 		0x41
+#define ESC 		0x09
+#define KEY_1		0x0a
+#define KEY_2		0x0b
+#define KEY_3		0x0c
+#define KEY_4		0x0d
+#define KEY_5		0x0e
+#define KEY_6		0x0f
+#define KEY_7		0x10
+#define KEY_8		0x11
+#define KEY_9		0x12
+#else
+#define KEY_UP 		0x6f
+#define KEY_LEFT 	0x71
+#define KEY_RIGHT 	0x72
+#define KEY_DOWN 	0x74
+#define SPACE 		0x41
+#define ESC 		0x09
+#define KEY_1		0x0a
+#define KEY_2		0x0b
+#define KEY_3		0x0c
+#define KEY_4		0x0d
+#define KEY_5		0x0e
+#define KEY_6		0x0f
+#define KEY_7		0x10
+#define KEY_8		0x11
+#define KEY_9		0x12
+
+#endif //IMX6
 
 class PixelController {
 public:
