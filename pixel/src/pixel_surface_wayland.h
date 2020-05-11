@@ -3,21 +3,37 @@
 #include "pixel_surface.h"
 
 class PixelSurfaceWayland : public PixelSurface {
-public:
-	static void seatCapabilities(void* data, wl_seat *seat, uint32_t capabilities);
-	static void seatHandleName(void* data, wl_seat *seat, const char* name);
 private:
 	void initDisplayClient() override;
 	void closeDisplayClient() override;
-	static void objectAvailable(void* data, wl_registry *registry, uint32_t name, const char* interface, uint32_t version);
 
-	static void objectRemoved(void* data, wl_registry *registry, uint32_t name);
+	static wl_compositor* compositor;
+	static wl_shell* shell;
+	static wl_seat* seat;
 
- 	wl_registry_listener listener = {
-		objectAvailable,
-		objectRemoved
-	};
-public:
+	static void seatCapabilities(void* data, wl_seat *seat, uint32_t capabilities);
+	static void seatHandleName(void* data, wl_seat *seat, const char* name);
+	static void objectAvailable(void* data, 
+								wl_registry *registry, 
+								uint32_t name, 
+								const char* interface, 
+								uint32_t version);
+
+	static void objectRemoved(	void* data, 
+								wl_registry *registry, 
+								uint32_t name);
+
+ 	static constexpr wl_registry_listener listener = {
+								objectAvailable,
+								objectRemoved};
+
+	static constexpr wl_seat_listener seatListener = {
+								seatCapabilities,
+								seatHandleName};
+
+	struct keyboardListener;
+	struct pointerListener;
+
 	static void pointerEnter (	void *data, 	
 								struct wl_pointer *pointer, 
 								uint32_t serial, 
@@ -45,6 +61,9 @@ public:
 								uint32_t axis, 
 								wl_fixed_t value); 
 
+	static void pointerMisc (	void *data, 
+								struct wl_pointer *pointer) {}; 
+
 	static void keyboardKeymap (void *data, 	
 								wl_keyboard *keyboard, 
 								uint32_t format, 
@@ -68,6 +87,7 @@ public:
 								uint32_t time, 
 								uint32_t key, 
 								uint32_t state); 
+
 	static void keyboardModifiers (	void *data, 
 								struct wl_keyboard *keyboard, 
 								uint32_t serial, 
@@ -77,19 +97,24 @@ public:
 								uint32_t group); 
 
 
+	static void keyboardMisc (	void *data, 
+								struct wl_keyboard *pointer,
+								int32_t param1,
+								int32_t param2) {}; 
 
+	static constexpr wl_keyboard_listener keyboardListener = {
+							PixelSurfaceWayland::keyboardKeymap, 
+							PixelSurfaceWayland::keyboardEnter, 
+							PixelSurfaceWayland::keyboardLeave, 
+							PixelSurfaceWayland::keyboardKey, 
+							PixelSurfaceWayland::keyboardModifiers,	
+							PixelSurfaceWayland::keyboardMisc};
+
+	static constexpr wl_pointer_listener pointerListener = {
+							PixelSurfaceWayland::pointerEnter, 
+							PixelSurfaceWayland::pointerLeave, 
+							PixelSurfaceWayland::pointerMotion, 
+							PixelSurfaceWayland::pointerButton, 			
+							PixelSurfaceWayland::pointerAxis,
+							PixelSurfaceWayland::pointerMisc};
 };
-
-static wl_keyboard_listener keyboardListener = {
-							&PixelSurfaceWayland::keyboardKeymap, 
-							&PixelSurfaceWayland::keyboardEnter, 
-							&PixelSurfaceWayland::keyboardLeave, 
-							&PixelSurfaceWayland::keyboardKey, 
-							&PixelSurfaceWayland::keyboardModifiers};
-
-static wl_pointer_listener pointerListener = {
-							&PixelSurfaceWayland::pointerEnter, 
-							&PixelSurfaceWayland::pointerLeave, 
-							&PixelSurfaceWayland::pointerMotion, 
-							&PixelSurfaceWayland::pointerButton, 			
-							&PixelSurfaceWayland::pointerAxis};

@@ -180,7 +180,9 @@ void PixelController::eventLoop()
 		gettimeofday(&startRenderTime, NULL);
 		pixelRenderer->render();
 		gettimeofday(&endRenderTime, NULL);
-#ifndef IMX6
+#ifdef IMX6
+		wl_display_dispatch(pixelSurface->display);
+#else
 		while (XPending(pixelSurface->display))
 		{
 			XEvent e;
