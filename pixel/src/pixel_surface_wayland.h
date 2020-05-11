@@ -5,6 +5,7 @@
 class PixelSurfaceWayland : public PixelSurface {
 public:
 	static void seatCapabilities(void* data, wl_seat *seat, uint32_t capabilities);
+	static void seatHandleName(void* data, wl_seat *seat, const char* name);
 private:
 	void initDisplayClient() override;
 	void closeDisplayClient() override;

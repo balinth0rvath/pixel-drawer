@@ -4,7 +4,9 @@
 wl_compositor *g_compositor;
 wl_shell *g_shell;
 wl_seat *g_seat;
-static wl_seat_listener seatListener = {&PixelSurfaceWayland::seatCapabilities};
+static wl_seat_listener seatListener = {
+							&PixelSurfaceWayland::seatCapabilities,
+							&PixelSurfaceWayland::seatHandleName};
 
 void PixelSurfaceWayland::pointerEnter (	void *data, 	
 							struct wl_pointer *pointer, 
@@ -170,6 +172,10 @@ void PixelSurfaceWayland::seatCapabilities(void* data, struct wl_seat *seat, uin
 		struct wl_keyboard *keyboard = wl_seat_get_keyboard (seat);
 		wl_keyboard_add_listener (keyboard, &keyboardListener, NULL);
 	}
+}
+void PixelSurfaceWayland::seatHandleName(void* data, wl_seat *seat, const char* name)
+{
+
 }
 
 void PixelSurfaceWayland::closeDisplayClient()
