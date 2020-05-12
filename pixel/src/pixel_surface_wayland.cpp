@@ -1,5 +1,6 @@
 #ifdef IMX6
 #include "pixel_surface_wayland.h"
+#include "pixel_controller.h"
 
 void PixelSurfaceWayland::initDisplayClient() {
     this->display = wl_display_connect(NULL);
@@ -9,13 +10,9 @@ void PixelSurfaceWayland::initDisplayClient() {
     }
     std::cout << "connected to display" << std::endl;
 	this->registry = wl_display_get_registry(this->display);
-	wl_registry_add_listener(this->registry, &this->listener, this->display); 
+	wl_registry_add_listener(this->registry, &this->listener, this); 
 	wl_display_dispatch(this->display);
 	wl_display_roundtrip(this->display);
-
-	this->shell = PixelSurfaceWayland::shell;
-	this->compositor = PixelSurfaceWayland::compositor;
-	this->seat = PixelSurfaceWayland::seat;
 
 	if (this->compositor == NULL)
 	{
@@ -45,10 +42,6 @@ void PixelSurfaceWayland::closeDisplayClient()
     std::cout << "disconnected from display" << std::endl;
 };
 
-wl_shell* PixelSurfaceWayland::shell;
-wl_seat* PixelSurfaceWayland::seat;
-wl_compositor* PixelSurfaceWayland::compositor;
-
 constexpr wl_registry_listener PixelSurfaceWayland::listener;
 constexpr wl_seat_listener PixelSurfaceWayland::seatListener; 
 constexpr wl_keyboard_listener PixelSurfaceWayland::keyboardListener; 
@@ -69,7 +62,6 @@ void PixelSurfaceWayland::pointerLeave (	void *data,
 							uint32_t serial, 
 							struct wl_surface *surface)
 {
-	
 } 
 
 void PixelSurfaceWayland::pointerMotion (	void *data, 
@@ -78,7 +70,6 @@ void PixelSurfaceWayland::pointerMotion (	void *data,
 							wl_fixed_t x,
 							wl_fixed_t y) 
 {
-	
 }
 
 void PixelSurfaceWayland::pointerButton (	void *data, 
@@ -88,7 +79,7 @@ void PixelSurfaceWayland::pointerButton (	void *data,
 							uint32_t button, 
 							uint32_t state)
 {
-	
+
 }
  
 void PixelSurfaceWayland::pointerAxis (	void *data, 
@@ -133,6 +124,8 @@ void PixelSurfaceWayland::keyboardKey (	void *data,
 							uint32_t key, 
 							uint32_t state)
 {
+	PixelSurfaceWayland* pixelSurfaceWayland = reinterpret_cast<PixelSurfaceWayland*>(data);
+	pixelSurfaceWayland->pixelController->processKeyCode(0x41);
 	
 }
  
@@ -150,26 +143,27 @@ void PixelSurfaceWayland::keyboardModifiers (	void *data,
 
 void PixelSurfaceWayland::objectAvailable(void* data, wl_registry *registry, uint32_t name, const char* interface, uint32_t version)
 {
+	PixelSurfaceWayland* pixelSurfaceWayland = reinterpret_cast<PixelSurfaceWayland*>(data);
 	std::cout << "new wayland global object: interface=" << interface << ", name=" << name << std::endl;
 	if (strcmp(interface,"wl_compositor")==0)
 	{
-		PixelSurfaceWayland::compositor = static_cast<wl_compositor*>
+		pixelSurfaceWayland->compositor = static_cast<wl_compositor*>
 			(wl_registry_bind(registry, name, &wl_compositor_interface, version)); 
 		std::cout << "Compositor found" << std::endl;
 		return;
 	}
 	if (strcmp(interface, "wl_shell")==0)
 	{
-		PixelSurfaceWayland::shell = static_cast<wl_shell*>
+		pixelSurfaceWayland->shell = static_cast<wl_shell*>
 			(wl_registry_bind(registry, name, &wl_shell_interface, version));
 		std::cout << "Shell found" << std::endl;
 		return;
 	}
 	if (strcmp(interface, "wl_seat")==0)
 	{
-		PixelSurfaceWayland::seat = static_cast<wl_seat*>
+		pixelSurfaceWayland->seat = static_cast<wl_seat*>
 			(wl_registry_bind(registry, name, &wl_seat_interface, version));
-		wl_seat_add_listener(PixelSurfaceWayland::seat, &PixelSurfaceWayland::seatListener, NULL);
+		wl_seat_add_listener(pixelSurfaceWayland->seat, &PixelSurfaceWayland::seatListener, data);
 		std::cout << "Seat found" << std::endl;
 		return;
 	}
@@ -185,13 +179,13 @@ void PixelSurfaceWayland::seatCapabilities(void* data, struct wl_seat *seat, uin
 	if (capabilities & WL_SEAT_CAPABILITY_POINTER) {
 		std::cout << "WL_SEAT_CAPABILIT_POINTER listener added" << std::endl;
 		struct wl_pointer *pointer = wl_seat_get_pointer (seat);
-		wl_pointer_add_listener (pointer, &PixelSurfaceWayland::pointerListener, NULL);
+		wl_pointer_add_listener (pointer, &PixelSurfaceWayland::pointerListener, data);
 	}
 	
 	if (capabilities & WL_SEAT_CAPABILITY_KEYBOARD) {
 		std::cout << "WL_SEAT_CAPABILIT_KEYBOARD listener added" << std::endl;
 		struct wl_keyboard *keyboard = wl_seat_get_keyboard (seat);
-		wl_keyboard_add_listener (keyboard, &PixelSurfaceWayland::keyboardListener, NULL);
+		wl_keyboard_add_listener (keyboard, &PixelSurfaceWayland::keyboardListener, data);
 	}
 
 }

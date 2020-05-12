@@ -1,7 +1,6 @@
 #pragma once
 #include "pixel_common_headers.h"
-
-
+class PixelController;
 
 class PixelSurface {
 public:
@@ -19,6 +18,7 @@ public:
 	GLuint windowWidth=700;
 	GLuint windowHeight=700;
 
+	void setPixelController(PixelController* pixelController);
 	// TODO port 
 #ifdef IMX6
 	wl_display* display;
@@ -34,6 +34,7 @@ protected:
 	wl_surface * surface;
 	wl_shell_surface* shell_surface;
 	wl_seat* seat;
+	PixelController* pixelController;
 #else
 	Window window;
 #endif // IMX6

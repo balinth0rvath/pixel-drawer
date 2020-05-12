@@ -7,10 +7,6 @@ private:
 	void initDisplayClient() override;
 	void closeDisplayClient() override;
 
-	static wl_compositor* compositor;
-	static wl_shell* shell;
-	static wl_seat* seat;
-
 	static void seatCapabilities(void* data, wl_seat *seat, uint32_t capabilities);
 	static void seatHandleName(void* data, wl_seat *seat, const char* name);
 	static void objectAvailable(void* data, 

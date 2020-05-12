@@ -1,3 +1,4 @@
+#pragma once
 #include "src/pixel_common_headers.h"
 #include "src/pixel_file_manager.h"
 #include "src/pixel_renderer.h"
@@ -48,11 +49,11 @@ public:
 					std::unique_ptr<PixelFileManager>& pixelFileManager);
 
 	void eventLoop();
-private:
 	void processKeyCode(const int& keycode);
 	void processButton( const int& pointerX, 
 						const int& pointerY, 		
 						const int& button);
+private:
 	const std::unique_ptr<PixelRenderer>& pixelRenderer;
 	const std::unique_ptr<PixelSurface>& pixelSurface;
 	const std::unique_ptr<PixelGLProgramManager>& pixelGLProgramManager;

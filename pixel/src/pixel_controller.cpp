@@ -12,6 +12,7 @@ PixelController::PixelController(std::unique_ptr<PixelRenderer>& pixelRenderer,
 								pixelFileManager(pixelFileManager)
 						
 {
+	pixelSurface->setPixelController(this); 
 }
 
 void PixelController::processButton(const int& pointerX, 	

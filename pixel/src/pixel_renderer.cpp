@@ -11,7 +11,8 @@ PixelRenderer::PixelRenderer(std::unique_ptr<PixelGLProgramManager>& pixelGLProg
 
 void PixelRenderer::generateSphere(const std::unique_ptr<PixelSurface>& pixelSurface)
 {
-	this->pixelAnimation = std::make_unique<PixelAnimation>(pixelSurface);
+	this->pixelAnimation = 
+		std::make_unique<PixelAnimation>(pixelSurface->windowWidth, pixelSurface->windowHeight);
 	this->vertexBufferSphere = std::make_unique<std::vector<GLfloat>>(0);
 	this->indexBufferSphere = std::make_unique<std::vector<GLubyte>>(0);
 	this->pixelMesh->generateVertexBufferSphere(vertexBufferSphere);

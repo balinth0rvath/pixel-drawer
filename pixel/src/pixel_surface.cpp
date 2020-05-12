@@ -1,5 +1,6 @@
 #include "pixel_surface.h"
 
+
 PixelSurface::PixelSurface() {
 	this->attribList = { 
 	EGL_RED_SIZE, 8,
@@ -137,8 +138,6 @@ void PixelSurface::initEGL() {
       exit(1);
    }
 
-
- 
    eglMakeCurrent( this->eglDisplay, this->eglSurface, this->eglSurface, this->eglContext );
 
 };
@@ -152,5 +151,8 @@ void PixelSurface::closeEGL()
 	closeDisplayClient();
 };
 
-
+void PixelSurface::setPixelController(PixelController* pixelController)
+{
+	this->pixelController = pixelController;
+}
 

@@ -1,12 +1,11 @@
 #pragma once
 #include "src/pixel_common_headers.h"
-#include "src/pixel_surface.h"
 
 enum class PixelAnimationState;
 
 class PixelAnimation {
 public:
-	PixelAnimation(const std::unique_ptr<PixelSurface>& pixelSurface);
+	PixelAnimation(const GLuint& windowWidth, const GLuint& windowHeight);
 	void pushSphereBack();
 	void pullSphereFront();
 	PixelAnimationState getSphereAnimationState() const { return this->pixelAnimationState; };
