@@ -5,7 +5,8 @@
 #include "src/pixel_animation.h"
 
 #ifdef IMX6
-
+#define MAX_FPS		50
+#define FRAME_US	1000000 / MAX_FPS
 #define KEY_UP 		0x67
 #define KEY_LEFT 	0x69
 #define KEY_RIGHT 	0x6a
