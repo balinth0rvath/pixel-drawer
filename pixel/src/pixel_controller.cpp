@@ -219,13 +219,14 @@ void PixelController::eventLoop()
 		uint32_t end = endRenderTime.tv_usec; 	
 		uint32_t delta = end - start;
 
+#ifdef IMX6
 		if (delta < FRAME_US)
 		{
 			usleep(FRAME_US - delta);
 			gettimeofday(&endRenderTime, NULL);
 			end = endRenderTime.tv_usec; 	
 		}
-		
+#endif	
 		if (end > start)
 		{
 			sumRenderTime+=	(end - start);
@@ -233,7 +234,6 @@ void PixelController::eventLoop()
 		
 		if (!counter)
 		{
-			std::cout << FRAME_US << std::endl;
 			pixelFileManager->saveFile(currentFile,pixelRenderer);	
 			counter=0;
 			double fps = 1000000.0f / (double)(sumRenderTime >> 8);

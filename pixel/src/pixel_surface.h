@@ -26,6 +26,7 @@ public:
 	Display* display;
 #endif // IMX6
 protected:
+	PixelController* pixelController;
 #ifdef IMX6
 	wl_compositor* compositor;
 	wl_shell* shell;
@@ -34,7 +35,6 @@ protected:
 	wl_surface * surface;
 	wl_shell_surface* shell_surface;
 	wl_seat* seat;
-	PixelController* pixelController;
 #else
 	Window window;
 #endif // IMX6
