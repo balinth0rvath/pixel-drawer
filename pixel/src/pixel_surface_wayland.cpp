@@ -46,6 +46,7 @@ constexpr wl_registry_listener PixelSurfaceWayland::listener;
 constexpr wl_seat_listener PixelSurfaceWayland::seatListener; 
 constexpr wl_keyboard_listener PixelSurfaceWayland::keyboardListener; 
 constexpr wl_pointer_listener PixelSurfaceWayland::pointerListener; 
+constexpr wl_touch_listener PixelSurfaceWayland::touchListener; 
 
 void PixelSurfaceWayland::pointerEnter (	void *data, 	
 							struct wl_pointer *pointer, 
@@ -54,6 +55,7 @@ void PixelSurfaceWayland::pointerEnter (	void *data,
 							wl_fixed_t surface_x, 
 							wl_fixed_t surface_y)
 {
+	std::cout << "pointer enter " << std::endl;
 	
 }
 
@@ -62,6 +64,7 @@ void PixelSurfaceWayland::pointerLeave (	void *data,
 							uint32_t serial, 
 							struct wl_surface *surface)
 {
+	std::cout << "pointer leave " << std::endl;
 } 
 
 void PixelSurfaceWayland::pointerMotion (	void *data, 
@@ -70,6 +73,7 @@ void PixelSurfaceWayland::pointerMotion (	void *data,
 							wl_fixed_t x,
 							wl_fixed_t y) 
 {
+	std::cout << "motion x=" << x << " y=" << y << std::endl;
 }
 
 void PixelSurfaceWayland::pointerButton (	void *data, 
@@ -79,6 +83,7 @@ void PixelSurfaceWayland::pointerButton (	void *data,
 							uint32_t button, 
 							uint32_t state)
 {
+	std::cout << "pointer button " << std::endl;
 
 }
  
@@ -88,6 +93,7 @@ void PixelSurfaceWayland::pointerAxis (	void *data,
 							uint32_t axis, 
 							wl_fixed_t value)
 {
+	std::cout << "pointer axis " << std::endl;
 	
 } 
 
@@ -131,7 +137,7 @@ void PixelSurfaceWayland::keyboardKey (	void *data,
 	}
 }
  
-void PixelSurfaceWayland::keyboardModifiers (	void *data, 
+void PixelSurfaceWayland::keyboardModifiers (void *data, 
 							struct wl_keyboard *keyboard, 
 							uint32_t serial, 
 							uint32_t mods_depressed, 
@@ -142,6 +148,54 @@ void PixelSurfaceWayland::keyboardModifiers (	void *data,
 
 } 
 
+void PixelSurfaceWayland::touchDown(void *data, 	
+								struct wl_touch *wl_touch,
+		  						uint32_t serial, 
+								uint32_t time, 
+								struct wl_surface *surface,
+		  						int32_t id, 
+								wl_fixed_t x_w, 
+								wl_fixed_t y_w)
+{
+	uint32_t x = x_w >> 8;
+	uint32_t y = y_w >> 8;
+	std::cout << "DOWN@"  << x << " " << y << std::endl;
+	
+}
+
+void PixelSurfaceWayland::touchUp(void *data, 
+								struct wl_touch *wl_touch,
+								uint32_t serial, 
+								uint32_t time, 
+								int32_t id)
+{
+
+}
+	
+void PixelSurfaceWayland::touchMotion(void *data, 
+								struct wl_touch *wl_touch,
+		    					uint32_t time, 
+								int32_t id, 	
+								wl_fixed_t x_w, 
+								wl_fixed_t y_w)
+{
+	uint32_t x = x_w >> 8;
+	uint32_t y = y_w >> 8;
+	PixelSurfaceWayland* pixelSurfaceWayland = reinterpret_cast<PixelSurfaceWayland*>(data);
+	pixelSurfaceWayland->pixelController->processButton(x,y,0);
+}
+
+void PixelSurfaceWayland::touchFrame(void *data, 
+								struct wl_touch *wl_touch)
+{
+
+}
+
+void PixelSurfaceWayland::touchCancel(void *data, 
+								struct wl_touch *wl_touch)
+{
+
+}
 
 void PixelSurfaceWayland::objectAvailable(void* data, wl_registry *registry, uint32_t name, const char* interface, uint32_t version)
 {
@@ -188,6 +242,11 @@ void PixelSurfaceWayland::seatCapabilities(void* data, struct wl_seat *seat, uin
 		std::cout << "WL_SEAT_CAPABILIT_KEYBOARD listener added" << std::endl;
 		struct wl_keyboard *keyboard = wl_seat_get_keyboard (seat);
 		wl_keyboard_add_listener (keyboard, &PixelSurfaceWayland::keyboardListener, data);
+	}
+	if (capabilities & WL_SEAT_CAPABILITY_TOUCH) {
+		std::cout << "WL_SEAT_CAPABILIT_TOUCH listener added" << std::endl;
+		struct wl_touch *touch = wl_seat_get_touch(seat);
+		wl_touch_add_listener(touch, &PixelSurfaceWayland::touchListener, data);
 	}
 
 }

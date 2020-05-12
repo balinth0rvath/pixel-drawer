@@ -29,6 +29,7 @@ private:
 
 	struct keyboardListener;
 	struct pointerListener;
+	struct touchListener;
 
 	static void pointerEnter (	void *data, 	
 								struct wl_pointer *pointer, 
@@ -58,7 +59,7 @@ private:
 								wl_fixed_t value); 
 
 	static void pointerMisc (	void *data, 
-								struct wl_pointer *pointer) {}; 
+								struct wl_pointer *pointer) { std::cout << "misc" << std::endl;}; 
 
 	static void keyboardKeymap (void *data, 	
 								wl_keyboard *keyboard, 
@@ -92,11 +93,38 @@ private:
 								uint32_t mods_locked, 
 								uint32_t group); 
 
-
 	static void keyboardMisc (	void *data, 
 								struct wl_keyboard *pointer,
 								int32_t param1,
 								int32_t param2) {}; 
+
+	static void touchDown(		void *data, 	
+								struct wl_touch *wl_touch,
+		  						uint32_t serial, 
+								uint32_t time, 
+								struct wl_surface *surface,
+		  						int32_t id, 
+								wl_fixed_t x_w, 
+								wl_fixed_t y_w);
+
+	static void touchUp(		void *data, 
+								struct wl_touch *wl_touch,
+								uint32_t serial, 
+								uint32_t time, 
+								int32_t id);
+	
+	static void touchMotion(	void *data, 
+								struct wl_touch *wl_touch,
+		    					uint32_t time, 
+								int32_t id, 	
+								wl_fixed_t x_w, 
+								wl_fixed_t y_w);
+
+	static void touchFrame(		void *data, 
+								struct wl_touch *wl_touch);
+
+	static void	touchCancel(	void *data, 
+								struct wl_touch *wl_touch);
 
 	static constexpr wl_keyboard_listener keyboardListener = {
 							PixelSurfaceWayland::keyboardKeymap, 
@@ -113,4 +141,10 @@ private:
 							PixelSurfaceWayland::pointerButton, 			
 							PixelSurfaceWayland::pointerAxis,
 							PixelSurfaceWayland::pointerMisc};
+	static constexpr wl_touch_listener touchListener = {
+							PixelSurfaceWayland::touchDown,
+							PixelSurfaceWayland::touchUp,
+							PixelSurfaceWayland::touchMotion,
+							PixelSurfaceWayland::touchFrame,
+							PixelSurfaceWayland::touchCancel}; 
 };

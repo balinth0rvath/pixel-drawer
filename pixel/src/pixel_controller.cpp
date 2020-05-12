@@ -176,6 +176,7 @@ void PixelController::eventLoop()
 		pixelRenderer->focusPixel(cursorX,cursorY);
 	
 	this->pixelFileManager->loadFile(this->currentFile, pixelRenderer);	
+	int once=0;
 	for (;!shouldStop;)
 	{
 		gettimeofday(&startRenderTime, NULL);
