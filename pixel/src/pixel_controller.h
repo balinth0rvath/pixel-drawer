@@ -6,21 +6,21 @@
 
 #ifdef IMX6
 
-#define KEY_UP 		0x6f
-#define KEY_LEFT 	0x71
-#define KEY_RIGHT 	0x72
-#define KEY_DOWN 	0x74
-#define SPACE 		0x41
-#define ESC 		0x09
-#define KEY_1		0x0a
-#define KEY_2		0x0b
-#define KEY_3		0x0c
-#define KEY_4		0x0d
-#define KEY_5		0x0e
-#define KEY_6		0x0f
-#define KEY_7		0x10
-#define KEY_8		0x11
-#define KEY_9		0x12
+#define KEY_UP 		0x67
+#define KEY_LEFT 	0x69
+#define KEY_RIGHT 	0x6a
+#define KEY_DOWN 	0x6c
+#define SPACE 		0x39
+#define ESC 		0x01
+#define KEY_1		0x02
+#define KEY_2		0x03
+#define KEY_3		0x04
+#define KEY_4		0x05
+#define KEY_5		0x06
+#define KEY_6		0x07
+#define KEY_7		0x08
+#define KEY_8		0x09
+#define KEY_9		0x0a
 #else
 #define KEY_UP 		0x6f
 #define KEY_LEFT 	0x71

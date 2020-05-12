@@ -125,8 +125,10 @@ void PixelSurfaceWayland::keyboardKey (	void *data,
 							uint32_t state)
 {
 	PixelSurfaceWayland* pixelSurfaceWayland = reinterpret_cast<PixelSurfaceWayland*>(data);
-	pixelSurfaceWayland->pixelController->processKeyCode(0x41);
-	
+	if (state)
+	{
+		pixelSurfaceWayland->pixelController->processKeyCode(key);
+	}
 }
  
 void PixelSurfaceWayland::keyboardModifiers (	void *data, 
