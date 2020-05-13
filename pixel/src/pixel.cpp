@@ -22,15 +22,15 @@ int  main()
 #endif
 	auto pixelPalette = std::make_unique<PixelPalette>();
 	auto pixelRenderer = std::make_unique<PixelRenderer>(
-								pixelGLProgramManager, 
-								pixelSurface, 		
-								pixelPalette);
+								pixelGLProgramManager.get(), 
+								pixelSurface.get(), 		
+								pixelPalette.get());
 	auto pixelController = std::make_unique<PixelController>(
-								pixelRenderer, 
-								pixelSurface,
-								pixelGLProgramManager,
-								pixelPalette,
-								pixelFileManager);
+								pixelRenderer.get(), 
+								pixelSurface.get(),
+								pixelGLProgramManager.get(),
+								pixelPalette.get(),
+								pixelFileManager.get());
 
 
 	pixelSurface->initEGL();
@@ -41,7 +41,7 @@ int  main()
 
 
 	pixelRenderer->generateCanvas();
-	pixelRenderer->generateSphere(pixelSurface);
+	pixelRenderer->generateSphere(pixelSurface.get());
 	pixelController->eventLoop();
 	pixelSurface->closeEGL();
 

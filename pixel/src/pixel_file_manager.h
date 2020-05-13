@@ -4,8 +4,8 @@
 
 class PixelFileManager {
 public:
-	void loadFile(const int& fileNumber, const std::unique_ptr<PixelRenderer>& pixelRenderer);
-	void saveFile(const int& fileNumber, const std::unique_ptr<PixelRenderer>& pixelRenderer);
+	void loadFile(const int& fileNumber, PixelRenderer* const pixelRenderer);
+	void saveFile(const int& fileNumber, PixelRenderer* const pixelRenderer);
 private:
 	inline std::string createFilename(const int& fileNumber);
 };

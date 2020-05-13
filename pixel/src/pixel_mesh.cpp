@@ -1,6 +1,6 @@
 #include "pixel_mesh.h"
 
-PixelMesh::PixelMesh(	const std::unique_ptr<PixelPalette>& pixelPalette, 
+PixelMesh::PixelMesh(	PixelPalette* const pixelPalette, 
 						const GLuint& xSize, 
 						const GLuint& ySize)
 	: pixelPalette(pixelPalette)
@@ -10,7 +10,7 @@ PixelMesh::PixelMesh(	const std::unique_ptr<PixelPalette>& pixelPalette,
 }
 
 
-void PixelMesh::generateVertexBufferSphere(const std::unique_ptr<std::vector<GLfloat>>& vertexBufferSphere)
+void PixelMesh::generateVertexBufferSphere(std::vector<GLfloat>* const vertexBufferSphere)
 {
 	for(GLuint invert = 0; invert < 2; ++invert)
 		for(GLuint zetaIndex = 0; zetaIndex<4; ++zetaIndex)
@@ -37,13 +37,13 @@ void PixelMesh::generateVertexBufferSphere(const std::unique_ptr<std::vector<GLf
 					pixelPalette->getGreen(alphaIndex, zetaIndex + invert * 4));
 				vertexBufferSphere->push_back(
 					pixelPalette->getBlue(alphaIndex, zetaIndex + invert * 4));
-					
+				 	
 				vertexBufferSphere->push_back(1.0f);
 
 			}
 }
 
-void PixelMesh::generateIndexBufferSphere(const std::unique_ptr<std::vector<GLubyte>>& indexBufferSphere)
+void PixelMesh::generateIndexBufferSphere(std::vector<GLubyte>* const indexBufferSphere)
 {
 	for (GLuint invert = 0; invert < 2; ++invert)
 		for (GLuint zetaIndex = 0; zetaIndex<3; ++zetaIndex)
@@ -74,8 +74,8 @@ void PixelMesh::generateIndexBufferSphere(const std::unique_ptr<std::vector<GLub
 }
 
 void PixelMesh::generateVertexBufferMatrix(	
-								const std::unique_ptr<std::vector<GLfloat>>& vertexBufferMatrix,
-								const std::unique_ptr<std::vector<GLuint>>& colorBuffer, 
+								std::vector<GLfloat>* const vertexBufferMatrix,
+								std::vector<GLuint>* const colorBuffer, 
 								const GLuint& xSize, 		
 								const GLuint& ySize)
 {
@@ -88,8 +88,8 @@ void PixelMesh::generateVertexBufferMatrix(
 	}
 }
 
-void PixelMesh::addVertex(	const std::unique_ptr<std::vector<GLfloat>>& vertexBufferMatrix,
-							const std::unique_ptr<std::vector<GLuint>>& colorBuffer,	
+void PixelMesh::addVertex(	std::vector<GLfloat>* const vertexBufferMatrix,
+							std::vector<GLuint>* const colorBuffer,	
 							const GLuint& x, 
 							const GLuint& y,
 							const GLuint& xSize,
@@ -136,7 +136,7 @@ void PixelMesh::addVertex(	const std::unique_ptr<std::vector<GLfloat>>& vertexBu
 
 }
 
-inline void PixelMesh::addZandColor(const std::unique_ptr<std::vector<GLfloat>>& vertexBufferMatrix,
+inline void PixelMesh::addZandColor(std::vector<GLfloat>* const vertexBufferMatrix,
 									const GLuint& x, 		
 									const GLuint& y, 
 									const GLuint& color)

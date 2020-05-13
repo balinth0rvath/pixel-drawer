@@ -43,11 +43,11 @@
 
 class PixelController {
 public:
-	PixelController(std::unique_ptr<PixelRenderer>& pixelRenderer,
-					std::unique_ptr<PixelSurface>& pixelSurface,
-					std::unique_ptr<PixelGLProgramManager>& pixelGLProgramManager,
-					std::unique_ptr<PixelPalette>& pixelPalette,
-					std::unique_ptr<PixelFileManager>& pixelFileManager);
+	PixelController(PixelRenderer* const pixelRenderer,
+					PixelSurface* const pixelSurface,
+					PixelGLProgramManager* const pixelGLProgramManager,
+					PixelPalette* const pixelPalette,
+					PixelFileManager* const pixelFileManager);
 
 	void eventLoop();
 	void processKeyCode(const int& keycode);
@@ -55,11 +55,11 @@ public:
 						const int& pointerY, 		
 						const int& button);
 private:
-	const std::unique_ptr<PixelRenderer>& pixelRenderer;
-	const std::unique_ptr<PixelSurface>& pixelSurface;
-	const std::unique_ptr<PixelGLProgramManager>& pixelGLProgramManager;
-	const std::unique_ptr<PixelPalette>& pixelPalette;
-	const std::unique_ptr<PixelFileManager>& pixelFileManager;
+	PixelRenderer* const pixelRenderer;
+	PixelSurface* const pixelSurface;
+	PixelGLProgramManager* const pixelGLProgramManager;
+	PixelPalette* const pixelPalette;
+	PixelFileManager* const pixelFileManager;
 
 	int shouldStop=0;
 

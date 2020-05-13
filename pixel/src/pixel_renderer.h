@@ -8,7 +8,9 @@
 
 class PixelRenderer {
 public:
-	PixelRenderer(std::unique_ptr<PixelGLProgramManager>& pixelGLProgramManager, std::unique_ptr<PixelSurface>& pixelSurface, std::unique_ptr<PixelPalette>& pixelPalette);
+	PixelRenderer(	PixelGLProgramManager* const pixelGLProgramManager, 
+					PixelSurface* const pixelSurface, 
+					PixelPalette* const pixelPalette);
 	void render();
 	void drawPixel(const GLuint& x, const GLuint& y, const GLuint& color);
 	void togglePixel(const GLuint& x, const GLuint& y, const GLuint& color);
@@ -17,7 +19,7 @@ public:
 	void unfocusPixel(const GLuint& x, const GLuint& y);
 
 	void generateCanvas();
-	void generateSphere(const std::unique_ptr<PixelSurface>& pixelSurface);
+	void generateSphere(PixelSurface* const pixelSurface);
 	inline GLuint getXSize() { return this->xSize; };
 	inline GLuint getYSize() { return this->ySize; };
 	void setSphereVisible();
@@ -25,9 +27,9 @@ public:
 	void changeSphereVisibility();
 	
 	std::unique_ptr<PixelAnimation> pixelAnimation;
-	const std::unique_ptr<PixelGLProgramManager>& pixelGLProgramManager;
-	const std::unique_ptr<PixelSurface>& pixelSurface;
-	const std::unique_ptr<PixelPalette>& pixelPalette;
+	PixelGLProgramManager* const pixelGLProgramManager;
+	PixelSurface* const pixelSurface;
+	PixelPalette* const pixelPalette;
 	void incAlpha(const GLfloat& dRotation);
 	void decAlpha(const GLfloat& dRotation);
 	void incZeta(const GLfloat& dRotation);
@@ -35,8 +37,8 @@ public:
 	GLuint getMainColorIndex() const;
 	GLuint getSubColorIndex() const;
 	GLuint checkCursorBounds(const GLuint& cursorX, const GLuint& cursorY) const;
-	void setColorBuffer(const std::unique_ptr<std::vector<GLuint>>& copyBuffer);
-	void getColorBuffer(std::unique_ptr<std::vector<GLuint>>& copyBuffer) const;
+	void setColorBuffer(std::vector<GLuint>* const copyBuffer);
+	void getColorBuffer(std::vector<GLuint>* const copyBuffer) const;
 	GLuint getBackgroundColor() const { return this->backgroundColor;};
 private:
 	void show() { std::cout << "alpha: " << sphereAngleAlpha << " zeta: " << sphereAngleZeta << std::endl; }; 

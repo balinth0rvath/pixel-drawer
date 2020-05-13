@@ -1,10 +1,10 @@
 #include "src/pixel_controller.h"
 
-PixelController::PixelController(std::unique_ptr<PixelRenderer>& pixelRenderer,
-								std::unique_ptr<PixelSurface>& pixelSurface,
-								std::unique_ptr<PixelGLProgramManager>& pixelGLProgramManager,
-								std::unique_ptr<PixelPalette>& pixelPalette,
-								std::unique_ptr<PixelFileManager>& pixelFileManager) :
+PixelController::PixelController(PixelRenderer* const pixelRenderer,
+								PixelSurface* const pixelSurface,
+								PixelGLProgramManager* const pixelGLProgramManager,
+								PixelPalette* const pixelPalette,
+								PixelFileManager* const pixelFileManager) :
 								pixelRenderer(pixelRenderer),
 								pixelSurface(pixelSurface),
 								pixelGLProgramManager(pixelGLProgramManager),

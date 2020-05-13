@@ -4,19 +4,19 @@
 
 class PixelMesh {
 public:
-	PixelMesh(	const std::unique_ptr<PixelPalette>& pixelPalette, 
+	PixelMesh(	PixelPalette* const pixelPalette, 
 				const GLuint& xSize, 
 				const GLuint& ySize);
 
-	void generateVertexBufferMatrix(const std::unique_ptr<std::vector<GLfloat>>& vertexBufferMatrix,
-									const std::unique_ptr<std::vector<GLuint>>& colorBuffer,	
+	void generateVertexBufferMatrix(std::vector<GLfloat>* const vertexBufferMatrix,
+									std::vector<GLuint>* const colorBuffer,	
 									const GLuint& xSize,
 									const GLuint& ySize);
-	void generateVertexBufferSphere(const std::unique_ptr<std::vector<GLfloat>>& vertexBufferSphere);
-	void generateIndexBufferSphere(const std::unique_ptr<std::vector<GLubyte>>& indexBufferSphere);
-	const std::unique_ptr<PixelPalette>& pixelPalette;
-	void addVertex(	const std::unique_ptr<std::vector<GLfloat>>& vertexBufferMatrix,
-					const std::unique_ptr<std::vector<GLuint>>& colorBuffer,	
+	void generateVertexBufferSphere(std::vector<GLfloat>* const vertexBufferSphere);
+	void generateIndexBufferSphere(std::vector<GLubyte>* const indexBufferSphere);
+	PixelPalette* const pixelPalette;
+	void addVertex(	std::vector<GLfloat>* const vertexBufferMatrix,
+					std::vector<GLuint>* const colorBuffer,	
 					const GLuint& x, 
 					const GLuint& y,
 					const GLuint& xSize,
@@ -24,7 +24,7 @@ public:
 );
 private:
 	const GLfloat sphereSize = 1.0f;	
-	inline void addZandColor(const std::unique_ptr<std::vector<GLfloat>>& vertexBufferMatrix,
+	inline void addZandColor(std::vector<GLfloat>* const vertexBufferMatrix,
 							const GLuint& x, 
 							const GLuint& y, 
 							const GLuint& color);

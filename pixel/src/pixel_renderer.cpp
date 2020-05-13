@@ -1,6 +1,8 @@
 #include "pixel_renderer.h"
 
-PixelRenderer::PixelRenderer(std::unique_ptr<PixelGLProgramManager>& pixelGLProgramManager, std::unique_ptr<PixelSurface>& pixelSurface, std::unique_ptr<PixelPalette>& pixelPalette) :
+PixelRenderer::PixelRenderer(	PixelGLProgramManager* const pixelGLProgramManager, 
+								PixelSurface* const pixelSurface, 
+								PixelPalette* const pixelPalette) :
 	pixelGLProgramManager(pixelGLProgramManager),
 	pixelSurface(pixelSurface),
 	pixelPalette(pixelPalette)
@@ -9,14 +11,14 @@ PixelRenderer::PixelRenderer(std::unique_ptr<PixelGLProgramManager>& pixelGLProg
 }
 
 
-void PixelRenderer::generateSphere(const std::unique_ptr<PixelSurface>& pixelSurface)
+void PixelRenderer::generateSphere(PixelSurface* const pixelSurface)
 {
 	this->pixelAnimation = 
 		std::make_unique<PixelAnimation>(pixelSurface->windowWidth, pixelSurface->windowHeight);
 	this->vertexBufferSphere = std::make_unique<std::vector<GLfloat>>(0);
 	this->indexBufferSphere = std::make_unique<std::vector<GLubyte>>(0);
-	this->pixelMesh->generateVertexBufferSphere(vertexBufferSphere);
-	this->pixelMesh->generateIndexBufferSphere(indexBufferSphere);
+	this->pixelMesh->generateVertexBufferSphere(vertexBufferSphere.get());
+	this->pixelMesh->generateIndexBufferSphere(indexBufferSphere.get());
 	
 }
 
@@ -24,16 +26,19 @@ void PixelRenderer::generateCanvas()
 {
 	this->colorBuffer = std::make_unique<std::vector<GLuint>>( xSize * ySize, backgroundColor );
 	this->vertexBufferMatrix = std::make_unique<std::vector<GLfloat>>();	
-	this->pixelMesh->generateVertexBufferMatrix(vertexBufferMatrix, colorBuffer, xSize, ySize);	
+	this->pixelMesh->generateVertexBufferMatrix(vertexBufferMatrix.get(), 
+												colorBuffer.get(), 
+												xSize, 
+												ySize);	
 }
 
-void PixelRenderer::setColorBuffer(const std::unique_ptr<std::vector<GLuint>>& copyBuffer)
+void PixelRenderer::setColorBuffer(std::vector<GLuint>* const copyBuffer)
 {
 	(*this->colorBuffer) = *copyBuffer;
 	repaint();
 }
 
-void PixelRenderer::getColorBuffer(std::unique_ptr<std::vector<GLuint>>& copyBuffer) const
+void PixelRenderer::getColorBuffer(std::vector<GLuint>* const copyBuffer) const
 {
 	*copyBuffer = (*this->colorBuffer);
 }

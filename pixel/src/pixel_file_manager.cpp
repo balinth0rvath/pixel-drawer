@@ -7,7 +7,7 @@ std::string PixelFileManager::createFilename(const int& fileNumber)
 	return fileNameStream.str();
 }
 
-void PixelFileManager::loadFile(const int& fileNumber, const std::unique_ptr<PixelRenderer>& pixelRenderer)
+void PixelFileManager::loadFile(const int& fileNumber, PixelRenderer* const pixelRenderer)
 {
 	std::unique_ptr<std::vector<GLuint>> copyBuffer = std::make_unique<std::vector<GLuint>>(0);
 	std::string filename = createFilename(fileNumber);
@@ -20,7 +20,7 @@ void PixelFileManager::loadFile(const int& fileNumber, const std::unique_ptr<Pix
 			std::make_unique<std::vector<GLuint>>(
 				pixelRenderer->getXSize() * pixelRenderer->getYSize(), 
 				pixelRenderer->getBackgroundColor());
-		pixelRenderer->setColorBuffer(copyBuffer);
+		pixelRenderer->setColorBuffer(copyBuffer.get());
 		return;
 	}
 	char str[7];	
@@ -36,13 +36,13 @@ void PixelFileManager::loadFile(const int& fileNumber, const std::unique_ptr<Pix
 		copyBuffer->push_back(pixel);
 	}	
 	
-	pixelRenderer->setColorBuffer(copyBuffer);
+	pixelRenderer->setColorBuffer(copyBuffer.get());
 }
 
-void PixelFileManager::saveFile(const int& fileNumber, const std::unique_ptr<PixelRenderer>& pixelRenderer)
+void PixelFileManager::saveFile(const int& fileNumber, PixelRenderer* const pixelRenderer)
 {
 	auto copyBuffer = std::make_unique<std::vector<GLuint>>();
-	pixelRenderer->getColorBuffer(copyBuffer);
+	pixelRenderer->getColorBuffer(copyBuffer.get());
 
 	std::ofstream pixelFileStream;
 
