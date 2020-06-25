@@ -1,6 +1,12 @@
 # Pixel Drawer 
 Simpe pixel art maker tool using GLES2. Works on Ubuntu with X11 without specifying a toolchain. Ported to iMX6 yocto/wayland
 The goal of this project was to practice creating and porting an openGLESv2 app from x86_64/X11 to ARVv7/Wayland on an evaluation board used in automotive industry.
+
+<p float="left">
+  <img src="https://github.com/balinth0rvath/pixel-drawer/blob/master/misc/pixel.png" width="200" />
+  <img src="https://github.com/balinth0rvath/pixel-drawer/blob/master/misc/pixel2.png" width="200" /> 
+</p>
+
 ## The target<br/>
 BD-SL-i.MX6 [Sabre Lite](https://boundarydevices.com/wiki/bd-sl-imx6/)
 ## Toolchain<br/>
